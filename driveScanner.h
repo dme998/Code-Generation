@@ -1,5 +1,5 @@
-#ifndef TESTSCANNER_H
-#define TESTSCANNER_H
+#ifndef DRIVESCANNER_H
+#define DRIVESCANNER_H
 #include <string>
 #include "token.h"
 
