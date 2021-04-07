@@ -13,7 +13,12 @@
 #include <unistd.h>  //for STDOUT_FILENO
 #include <fstream>
 //#include <stdio.h>  //fopen
+
+#include "token.h"
+#include "scanner.h"
+#include "testScanner.h"
 #include "parser.h"
+//#include "node.h"
 
 using namespace std;
 
@@ -64,7 +69,14 @@ int main(int argc, char *argv[]) {
       exit(0);
       break;
   }
-  
+ 
+
+  //TODO
+  //get token vector with scanner
+  //print token vector
+  //loop through vector, parsing tokens
+  //print tree
+
 
   cout << "Program end." << endl;
   return 0;
