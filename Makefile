@@ -3,12 +3,12 @@ CC= g++
 RM= rm -vf
 CPPFLAGS= -g -Wall -std=c++11 -I.
 PROGRAM= frontEnd
-OBJFILES= main.o parser.o scanner.o testScanner.o 
+OBJFILES= main.o parser.o scanner.o driveScanner.o 
 
 $(PROGRAM): $(OBJFILES)
 	$(CC) -o $(PROGRAM) $(OBJFILES)
 
-main.o: main.cpp token.h node.h
+main.o: main.cpp token.h ptree.h
 	$(CC) $(CPPFLAGS) -c main.cpp
 
 parser.o: parser.cpp parser.h
@@ -17,8 +17,8 @@ parser.o: parser.cpp parser.h
 scanner.o: scanner.cpp scanner.h
 	$(CC) $(CPPFLAGS) -c scanner.cpp
 
-testScanner.o: testScanner.cpp testScanner.h
-	$(CC) $(CPPFLAGS) -c testScanner.cpp
+driveScanner.o: driveScanner.cpp driveScanner.h
+	$(CC) $(CPPFLAGS) -c driveScanner.cpp
 
 clean:
 	$(RM) $(PROGRAM) $(OBJFILES)

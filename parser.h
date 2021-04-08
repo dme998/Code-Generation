@@ -1,6 +1,8 @@
 #ifndef PARSER_H
 #define PARSER_H
-//#include "node.h"
+#include "ptree.h"
+
+ParseTree parser();
 
 class Nonterminal {
   public:

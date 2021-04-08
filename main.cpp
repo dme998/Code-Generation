@@ -8,7 +8,7 @@
  */
 
 #include <iostream>
-//#include <vector>
+#include <vector>
 #include <string>
 #include <unistd.h>  //for STDOUT_FILENO
 #include <fstream>
@@ -16,9 +16,8 @@
 
 #include "token.h"
 #include "scanner.h"
-#include "testScanner.h"
+#include "driveScanner.h"
 #include "parser.h"
-//#include "node.h"
 
 using namespace std;
 
@@ -69,13 +68,16 @@ int main(int argc, char *argv[]) {
       exit(0);
       break;
   }
- 
+  
+  //run driveScanner driver to get final tokens vector
+  vector<token_t> tokens_v = driver(infile);
+  
+  //print tokens vector 
+  cout << "\nPrinting final tokens vector:" << endl;
+  printTokens(tokens_v);
 
-  //TODO
-  //get token vector with scanner
-  //print token vector
-  //loop through vector, parsing tokens
-  //print tree
+  //TODO loop through vector, parsing tokens
+  //TODO call fn to print tree
 
 
   cout << "Program end." << endl;

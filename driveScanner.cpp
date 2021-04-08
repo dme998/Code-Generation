@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <unistd.h>  //for STDOUT_FILENO
 #include "driveScanner.h"
 #include "scanner.h"
 #include "token.h"
@@ -11,13 +12,12 @@ const bool DEBUG = false;  //set to true to enable verbose print statements thro
 /**
  * drives the scanner to lexically analyze a file until EOF and prints tokens to console
  * @param filename name of file to be run through scanner
- * @return 0 if success, -1 if error
+ * @return the completed tokens vector
  */
-int driver(const std::string &filename) {
-  //cout << "Driver start." << endl;
+vector<token_t> driver(const std::string &filename) {
+  if (DEBUG) cout << "Driver start." << endl;
   
   vector<token_t> tokens_v;  //vector to hold all tokens received by scanner
-  //vector<char> chars_v;      //vector to hold individual characters
   token_t token;
   string wipstring;  //work-in-progress string to be appended-to before being passed to scanner
 
@@ -28,7 +28,8 @@ int driver(const std::string &filename) {
   }
   else {
     cout << "File open error." << endl;
-    return -1;
+    write(STDOUT_FILENO, "File open error. Terminating.\n", 30);
+    exit(1);
   }
   
   /* read through file char by char, filtering comments and whitespace,
@@ -97,8 +98,9 @@ int driver(const std::string &filename) {
       
       token = lex(wipstring, line);
       if (token.id == UNKNOWN_TK) {
-        cout << "Error: unrecognized token  " << token.instance << "  on line " << token.line << ".\n";
-        return -1;
+        cout << "Error:  " << token.instance << "  on line " << token.line << ".\n";
+        write(STDOUT_FILENO, "Unrecognized token.  Terminating.\n", 34);
+        exit(1);
       }
       if (token.id != WHITESPACE_TK) {
         tokens_v.push_back(token);
@@ -111,15 +113,9 @@ int driver(const std::string &filename) {
   }
   infile.close(); 
   if (DEBUG) cout << "File closed." << endl;
-  
+  if (DEBUG) cout << "Driver end." << endl;
 
-  //print vector of tokens
-  if (DEBUG) cout << "\nPrinting final tokens vector:" << endl;
-  printTokens(tokens_v);
-  
-
-  //cout << "Driver end." << endl;
-  return 0;
+  return tokens_v;
 }
 
 
