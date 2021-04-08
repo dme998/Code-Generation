@@ -1,18 +1,18 @@
-Project:        Parser (P2)
+Project:        Parser and Tree Builder (P2)
 Description:    Parses token triplets after lexical analysis
 Author:         Daniel Eggers <dme998@mail.umsl.edu>
 Course:         Program Translation (CS4280-001)
 Instructor:     Mark Hauschild
 Date:           April 12, 2021 
+Test System:    CentOS Linux 7 (Core)
 Files:          main.cpp parser.cpp parser.h driveScanner.cpp driveScanner.h 
                 scanner.cpp scanner.h ptree.h token.h
 Produces:       tmp.fs (overwrites)
 
 
 BNF Grammar used:
-Please ensure this uses only tokens detected in your P1, no exceptions. 
-Note that some legal tokens will pass the scanner but will always lead 
-to an error here as they are not part of this BNF.
+Uses only tokens detected in P1, no exceptions. 
+Some legal tokens will pass the scanner but will always lead to an error here as they are not part of this BNF
 
 <program> -> <vars> main <block>
 <block>   -> begin <vars> <stats> end
