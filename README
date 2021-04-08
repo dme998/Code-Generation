@@ -1,10 +1,10 @@
 Project:        Parser (P2)
-Description:    Parses token triplets 
+Description:    Parses token triplets after lexical analysis
 Author:         Daniel Eggers <dme998@mail.umsl.edu>
 Course:         Program Translation (CS4280-001)
 Instructor:     Mark Hauschild
 Date:           April 12, 2021 
-Files:          main.cpp parser.cpp parser.h
+Files:          main.cpp parser.cpp parser.h driveScanner.cpp driveScanner.h 
+                scanner.cpp scanner.h ptree.h token.h
 Produces:       tmp.fs (overwrites)
-
 
