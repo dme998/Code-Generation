@@ -124,6 +124,13 @@ vector<token_t> driver(const std::string &filename) {
   }//end of while loop
   infile.close(); 
   if (DEBUG) cout << "File closed." << endl;
+  
+  //add EOF token to finalize the vector
+  token.id = EOF_TK;
+  token.instance = "\u0000";
+  token.line = line;
+  tokens_v.push_back(token);
+  if (DEBUG) cout << "Added EOF token to final vector." << endl;  
   if (DEBUG) cout << "Driver end." << endl;
 
   return tokens_v;
