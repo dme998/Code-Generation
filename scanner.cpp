@@ -19,12 +19,12 @@ using std::cout;  using std::endl;
 using std::string;
 
 /**
- * returns one token 
+ * returns one token triplet 
  * @param input filtered string to be lexically analyzed
  * @param line current line number of the file that the token is on
  * @return token 
  */
-token_t lex(string input, unsigned int line) {
+token_t tokenize(string input, unsigned int line) {
   //cout << "Scanner called." << endl;
 
   token_t token;

@@ -79,6 +79,8 @@ int main(int argc, char *argv[]) {
   printTokens(tokens_v);
 
   //TODO loop through vector, parsing tokens
+  //parser(tokens_v);
+
   //TODO call fn to print tree
 
 

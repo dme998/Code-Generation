@@ -15,12 +15,12 @@
 #include "token.h"
 
 /**
- * returns one token 
+ * returns one token triplet
  * @param filename name of file to be run through scanner
  * @param line current line number of the file that the token is on
  * @return token
  */
-token_t lex(std::string input, unsigned int line);
+token_t tokenize(std::string input, unsigned int line);
 
 
 /**

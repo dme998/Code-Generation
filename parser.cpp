@@ -15,8 +15,16 @@
 #include "parser.h"
 #include "ptree.h"
 
+/**
+ * returns one token 
+ * @param input filtered string to be lexically analyzed
+ * @param line current line number of the file that the token is on
+ * @return completed parse tree
+ */
 ParseTree parser() {
   ParseTree mytree;
+
+
 
   return mytree;
 }

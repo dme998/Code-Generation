@@ -105,9 +105,9 @@ vector<token_t> driver(const std::string &filename) {
     } 
     //if we're done building, let's pass the assembled string and tokenize it:
     if (building == false) {
-      if (DEBUG) cout << "lex(" << wipstring << ");" << endl;
+      if (DEBUG) cout << "tokenize(" << wipstring << ");" << endl;
       
-      token = lex(wipstring, line);
+      token = tokenize(wipstring, line);
       if (token.id == UNKNOWN_TK) {
         cout << "Error:  " << token.instance << "  on line " << token.line << ".\n";
         write(STDOUT_FILENO, "Unrecognized token.  Terminating.\n", 34);
