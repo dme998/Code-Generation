@@ -23,28 +23,30 @@ class Nonterminal {
 
     }
     
-    //functions for each nonterminal
-    void nt_program();
-    void nt_block();
-    void nt_vars();
-    void nt_expr();
-    void nt_N();
-    void nt_A();
-    void nt_M();
-    void nt_R();
-    void nt_stats();
-    void nt_mStat();
-    void nt_stat();
-    void nt_in();
-    void nt_out();
-    void nt_if();
-    void nt_loop();
-    void nt_assign();
-    void nt_RO();
-    void nt_label();
-    void nt_goto();
-    
-    void aux();  //check termination condition
+    /* functions for each nonterminal
+     * each fn creates exactly one tree node (or none if going into empty production)
+     * syntactic TKs (e.g. begin, end) can be thrown away; all others (ops, IDs, numbers) are stored in the node.
+     * every node has label consistent with the name of the function creating it
+     */
+    void fn_program(); //priority
+    void fn_block(); //priority
+    void fn_vars(); //priority
+    void fn_expr();
+    void fn_N();
+    void fn_A();
+    void fn_M();
+    void fn_R();
+    void fn_stats(); //priority
+    void fn_mStat(); //priority
+    void fn_stat(); //priority
+    void fn_in(); //priority
+    void fn_out();
+    void fn_if();
+    void fn_loop();
+    void fn_assign();
+    void fn_RO();
+    void fn_label();
+    void fn_goto();
 };
 
 #endif

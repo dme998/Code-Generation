@@ -1,6 +1,6 @@
 /* Project:        Parser and Tree Builder (P2)
  * Filename:       parser.cpp
- * Description:    parses tokens according to specified BNF
+ * Description:    parses tokens according to BNF specified in README
  * Author:         Daniel Eggers <dme998@mail.umsl.edu>
  * Course:         Program Translation (CS4280-001)
  * Instructor:     Mark Hauschild
@@ -16,15 +16,53 @@
 #include "ptree.h"
 
 /**
- * returns one token 
- * @param input filtered string to be lexically analyzed
- * @param line current line number of the file that the token is on
+ * auxillary function that parses tokens according to BNF
+ * @param tokens_v tokens vector built by lexical analyzer
  * @return completed parse tree
  */
-ParseTree parser() {
+ParseTree parser(vector<token_t> tokens_v) {
+  Nonterminal nonterminal;
   ParseTree mytree;
+  token_t mytoken;
+  printf("parser launch\n");
+
+  mytoken = tokens_v[0];
+  nonterminal.fn_program();
+  if (mytoken.id == EOF_TK) {
+    return mytree;
+  }
+  else {
+    printf("Error: EOF_TK expected, not received. Terminating.\n");
+    exit(1);
+  }
+
+}
 
 
+void Nonterminal :: fn_program() {
+  
+}
 
-  return mytree;
+void Nonterminal :: fn_block() {
+  
+} 
+
+void Nonterminal :: fn_vars() {
+
+}
+
+void Nonterminal :: fn_stats() {
+
+}
+
+void Nonterminal :: fn_mStat() {
+
+} 
+
+void Nonterminal :: fn_stat() {
+  
+} 
+
+void Nonterminal :: fn_in() {
+
 }

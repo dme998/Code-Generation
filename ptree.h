@@ -19,18 +19,21 @@ using std::endl;
 
 class Node {
   public:
-    std::string value;  //data string stored in node
+
+    token_t token;
+    std::string label; //string literal of the nonterminal function (e.g. "block", "mStat")
+    int level;  //how deep the node is in the tree
     Node* left;
     Node* right;
 
     //constructor
     Node() {
-      value = "";
+      label = "?NT";
       left = NULL;
       right = NULL;
     }
-    Node(std::string s) {
-      value = s;
+    Node(std::string l) {
+      label = l; //e.g. "block" or "mStat"
       left = NULL;
       right = NULL;
     }

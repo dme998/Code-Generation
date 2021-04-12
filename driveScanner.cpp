@@ -121,7 +121,7 @@ vector<token_t> driver(const std::string &filename) {
       addLine = false;
     }
     
-  }
+  }//end of while loop
   infile.close(); 
   if (DEBUG) cout << "File closed." << endl;
   if (DEBUG) cout << "Driver end." << endl;
