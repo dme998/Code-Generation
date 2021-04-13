@@ -31,7 +31,7 @@ ParseTree parser() {
   mytoken = nextToken();
   nonterminal.fn_program();
   if (mytoken.id == EOF_TK) {
-    printf("EOF token received. Parse OK.\n");
+    printf("EOF token received.\nParse OK.\n");
     return mytree;
   }
   else {
@@ -55,14 +55,22 @@ token_t nextToken() {
 }
 
 
+/**
+ * show error message when unexpected token in parsing
+ * @param exp value expected by parser
+ * @param tk token most recently received by parser
+ */
 void error(string exp, token_t tk) {
   cout << "Error on line " << tk.line << ": " << "expected " << exp << " but received " 
-    << TOKENPRINTS[tk.id] << " " << tk.instance << ". Parse failed." << endl;
+    << TOKENPRINTS[tk.id] << " " << tk.instance << "\nParse failed." << endl;
   exit(1);
 };
 
 
-/* Nonterminal member functions */
+/**
+ * Nonterminal member functions for recursive descent 
+ * @return void (explicit)
+ */
 void Nonterminal :: fn_program() { //done
   cout << "call fn_program()" << endl;
   nonterminal.fn_vars();
@@ -147,15 +155,68 @@ void Nonterminal :: fn_mStat() {  //done
 } 
 
 
-void Nonterminal :: fn_stat() {  //TODO
-   cout << "call fn_stat()" << endl;
-   nonterminal.fn_in();
-   if (mytoken.id == OPERATOR_TK && mytoken.instance == ";") {
-     mytoken = nextToken();
-     return;
-   }
-   else error(";", mytoken);
-   //else if... <out>; | <block> | <if>; | <loop>; | <assign>; | <goto>; | <label>;
+void Nonterminal :: fn_stat() {  //done
+  cout << "call fn_stat()" << endl;
+  if (mytoken.id == KEYWORD_TK && mytoken.instance == "getter") { //First(in)
+    nonterminal.fn_in();
+    if (mytoken.id == OPERATOR_TK && mytoken.instance == ";") {
+      mytoken = nextToken();
+      return;
+    }
+    else error(";", mytoken);
+  }
+  else if (mytoken.id == KEYWORD_TK && mytoken.instance == "outter") { //First(out)
+    nonterminal.fn_out(); 
+    if (mytoken.id == OPERATOR_TK && mytoken.instance == ";") {
+      mytoken = nextToken();
+      return;
+    }
+    else error(";", mytoken);
+  }
+  else if (mytoken.id == KEYWORD_TK && mytoken.instance == "begin") {  //First(block)
+    nonterminal.fn_block();
+    return;
+  }
+  else if (mytoken.id == KEYWORD_TK && mytoken.instance == "if" ) {  //First(if)
+    nonterminal.fn_if();
+    if (mytoken.id == OPERATOR_TK && mytoken.instance == ";") {
+      mytoken = nextToken();
+      return;
+    }
+    else error(";", mytoken);
+  }
+  else if (mytoken.id == KEYWORD_TK && mytoken.instance == "loop" ) {  //First(loop)
+    nonterminal.fn_loop(); 
+    if (mytoken.id == OPERATOR_TK && mytoken.instance == ";") {
+      mytoken = nextToken();
+      return;
+    }
+    else error(";", mytoken);
+  }
+  else if (mytoken.id == KEYWORD_TK && mytoken.instance == "assign" ) {  //First(assign)
+    nonterminal.fn_assign();
+    if (mytoken.id == OPERATOR_TK && mytoken.instance == ";") {
+      mytoken = nextToken();
+      return;
+    }
+    else error(";", mytoken);
+  }
+  else if (mytoken.id == KEYWORD_TK && mytoken.instance == "proc" ) {  //First(goto)
+    nonterminal.fn_goto();
+    if (mytoken.id == OPERATOR_TK && mytoken.instance == ";") {
+      mytoken = nextToken();
+      return;
+    }
+    else error(";", mytoken);
+  }
+  else if (mytoken.id == KEYWORD_TK && mytoken.instance == "void" ) {  //First(label)
+    nonterminal.fn_label();
+    if (mytoken.id == OPERATOR_TK && mytoken.instance == ";") {
+      mytoken = nextToken();
+      return;
+    }
+    else error(";", mytoken);
+  }
 } 
 
 
@@ -170,4 +231,114 @@ void Nonterminal :: fn_in() {  //done
     else error(TOKENPRINTS[IDENTIFIER_TK], mytoken);
   }
   else error("getter", mytoken);
+}
+
+
+void Nonterminal :: fn_out() {  //done
+  cout << "call fn_out" << endl;
+  if (mytoken.id == KEYWORD_TK && mytoken.instance == "outter") {
+    mytoken = nextToken();
+    nonterminal.fn_expr();
+    return;
+  }
+  else error("outter", mytoken);
+}
+
+
+void Nonterminal :: fn_if() {  //done
+  if (mytoken.id == KEYWORD_TK && mytoken.instance == "if") {
+    mytoken = nextToken();
+    if (mytoken.id == OPERATOR_TK  && mytoken.instance == "[") {
+      mytoken = nextToken();
+      nonterminal.fn_expr();
+      nonterminal.fn_RO();
+      nonterminal.fn_expr();
+      if (mytoken.id == OPERATOR_TK && mytoken.instance == "]") {
+        mytoken = nextToken();
+        if (mytoken.id == KEYWORD_TK && mytoken.instance == "then") {
+          mytoken = nextToken();
+          nonterminal.fn_stat();
+          return;
+        }
+        else error("then", mytoken);
+      }
+      else error("]", mytoken);
+    }
+    else error("[", mytoken);
+  }
+  else error("if", mytoken);
+}
+
+
+void Nonterminal :: fn_loop() {  //TODO
+
+}
+
+
+void Nonterminal :: fn_assign() {  //TODO
+
+}
+
+
+void Nonterminal :: fn_goto() {  //done
+  if (mytoken.id == KEYWORD_TK && mytoken.instance == "proc") {
+    mytoken = nextToken();
+    if (mytoken.id == IDENTIFIER_TK) {
+      mytoken = nextToken();
+      return;
+    }
+    else error(TOKENPRINTS[IDENTIFIER_TK], mytoken);
+  }
+  else error("proc", mytoken);
+}
+
+
+void Nonterminal :: fn_label() {  //done
+  if (mytoken.id == KEYWORD_TK && mytoken.instance == "void") {
+    mytoken = nextToken();
+    if (mytoken.id == IDENTIFIER_TK) {
+      mytoken = nextToken();
+      return;
+    }
+    else error(TOKENPRINTS[IDENTIFIER_TK], mytoken);
+  }
+  else error("void", mytoken);
+}
+
+
+void Nonterminal :: fn_expr() {  //TODO
+
+}
+
+
+void Nonterminal :: fn_RO() {  //done
+  if (mytoken.id == OPERATOR_TK && mytoken.instance == "=>") {
+    mytoken = nextToken();
+    return;
+  }
+  else if (mytoken.id == OPERATOR_TK && mytoken.instance == "=<") {
+    mytoken = nextToken();
+    return;
+  }
+  else if (mytoken.id == OPERATOR_TK && mytoken.instance == "==") {
+    mytoken = nextToken();
+    return;
+  }
+  else if (mytoken.id == OPERATOR_TK && mytoken.instance == "[" ) {
+    mytoken = nextToken();
+    if (mytoken.id == OPERATOR_TK && mytoken.instance == "==") {
+      mytoken = nextToken();
+      if (mytoken.id == OPERATOR_TK && mytoken.instance == "]") {
+        mytoken = nextToken();
+        return;
+      }
+      else error("]", mytoken);
+    }
+    else error("==", mytoken);
+  }
+  else if (mytoken.id == OPERATOR_TK && mytoken.instance == "%") {
+    mytoken = nextToken();
+    return;
+  }
+  else error(TOKENPRINTS[OPERATOR_TK], mytoken);
 }
