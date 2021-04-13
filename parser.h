@@ -16,6 +16,7 @@
 extern std::vector<token_t> gtokens_v;
 ParseTree parser();
 token_t nextToken();
+void error(string exp, token_t tk);
 
 class Nonterminal {
   public:

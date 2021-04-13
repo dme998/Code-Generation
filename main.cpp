@@ -76,7 +76,7 @@ int main(int argc, char *argv[]) {
   driver(infile);
   
   //print tokens vector 
-  cout << "\nPrinting final tokens vector:" << endl;
+  cout << "Printing final tokens vector:" << endl;
   printTokens(gtokens_v);
 
   //TODO loop through vector, parsing tokens
