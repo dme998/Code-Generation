@@ -18,13 +18,14 @@
 static int vindex = 0;  //vindexition in the tokens vector (vector index)
 static token_t mytoken;  //dynamic token
 static Nonterminal nonterminal;  //for access to nonterminal functions
+const bool VERBOSE = true;  //set to true to enable verbose print statements throughout run
 
 /**
  * auxillary function that parses tokens according to BNF
  * @return completed parse tree
  */
 ParseTree parser() {
-  printf("parser launch\n");
+  //printf("parser launch\n");
   
   ParseTree mytree;
 
@@ -50,7 +51,7 @@ ParseTree parser() {
 token_t nextToken() {
   token_t token = gtokens_v.at(vindex);
   vindex++;
-  cout << "fetched token: " << token.instance << endl;
+  if (VERBOSE) cout << "fetched token: " << token.instance << endl;
   return token;
 }
 
@@ -72,7 +73,8 @@ void error(string exp, token_t tk) {
  * @return void (explicit)
  */
 void Nonterminal :: fn_program() { //done
-  cout << "call fn_program()" << endl;
+  //<program> -> <vars> main <block>
+  if (VERBOSE) cout << "call fn_program()" << endl;
   nonterminal.fn_vars();
   if (mytoken.id == KEYWORD_TK && mytoken.instance == "main") {
     mytoken = nextToken();
@@ -86,7 +88,8 @@ void Nonterminal :: fn_program() { //done
 
 
 void Nonterminal :: fn_block() {  //done
-  cout << "call fn_block()" << endl;
+  //<block> -> begin <vars> <stats> end
+  if (VERBOSE) cout << "call fn_block()" << endl;
   if (mytoken.id == KEYWORD_TK && mytoken.instance == "begin") {
     mytoken = nextToken();
     nonterminal.fn_vars();
@@ -103,7 +106,8 @@ void Nonterminal :: fn_block() {  //done
 
 
 void Nonterminal :: fn_vars() {  //done
-  cout << "call fn_vars()" << endl;
+  //<vars> -> epsilon | data Identifier := Integer ; <vars>
+  if (VERBOSE) cout << "call fn_vars()" << endl;
   if (mytoken.id == KEYWORD_TK && mytoken.instance == "main") {  //epsilon: Follow(vars)
     //do not consume tokens for follow sets
     return;
@@ -135,7 +139,8 @@ void Nonterminal :: fn_vars() {  //done
 
 
 void Nonterminal :: fn_stats() {  //done
-  cout << "call fn_stats()" << endl;
+  //<stats> -> <stat> <mStat>
+  if (VERBOSE) cout << "call fn_stats()" << endl;
   nonterminal.fn_stat();
   nonterminal.fn_mStat();
   return;
@@ -143,7 +148,8 @@ void Nonterminal :: fn_stats() {  //done
 
 
 void Nonterminal :: fn_mStat() {  //done
-  cout << "call fn_mStat()" << endl;
+  //<mStat> -> epsilon | <stat> <mStat>
+  if (VERBOSE) cout << "call fn_mStat()" << endl;
   if (mytoken.instance == "end") {  //epsilon: Follow(mStat)
     //do not consume tokens for follow sets
     return;
@@ -156,7 +162,8 @@ void Nonterminal :: fn_mStat() {  //done
 
 
 void Nonterminal :: fn_stat() {  //done
-  cout << "call fn_stat()" << endl;
+  //<stat> -> <in> ; | <out> ; | <block> | <if> ; | <loop> ; | <assign> ; | <goto> ; | <label> ;
+  if (VERBOSE) cout << "call fn_stat()" << endl;
   if (mytoken.id == KEYWORD_TK && mytoken.instance == "getter") { //First(in)
     nonterminal.fn_in();
     if (mytoken.id == OPERATOR_TK && mytoken.instance == ";") {
@@ -221,7 +228,8 @@ void Nonterminal :: fn_stat() {  //done
 
 
 void Nonterminal :: fn_in() {  //done
-  cout << "call fn_in" << endl;
+  //<in> -> getter Identifier
+  if (VERBOSE) cout << "call fn_in()" << endl;
   if (mytoken.id == KEYWORD_TK && mytoken.instance == "getter") {
     mytoken = nextToken();
     if (mytoken.id == IDENTIFIER_TK) {    
@@ -235,7 +243,8 @@ void Nonterminal :: fn_in() {  //done
 
 
 void Nonterminal :: fn_out() {  //done
-  cout << "call fn_out" << endl;
+  //<out> -> outter <expr>
+  if (VERBOSE) cout << "call fn_out()" << endl;
   if (mytoken.id == KEYWORD_TK && mytoken.instance == "outter") {
     mytoken = nextToken();
     nonterminal.fn_expr();
@@ -246,6 +255,8 @@ void Nonterminal :: fn_out() {  //done
 
 
 void Nonterminal :: fn_if() {  //done
+  //<if> -> if [ <expr> ] <RO> <expr> ] <stat>
+  if (VERBOSE) cout << "call fn_if()" << endl;
   if (mytoken.id == KEYWORD_TK && mytoken.instance == "if") {
     mytoken = nextToken();
     if (mytoken.id == OPERATOR_TK  && mytoken.instance == "[") {
@@ -272,6 +283,7 @@ void Nonterminal :: fn_if() {  //done
 
 void Nonterminal :: fn_loop() {  //done
   //<loop> -> loop [ <expr> <RO> <expr> ] <stat>
+  if (VERBOSE) cout << "call fn_loop()" << endl; 
   if (mytoken.id == KEYWORD_TK && mytoken.instance == "loop") {
     mytoken = nextToken();
     if (mytoken.id == OPERATOR_TK && mytoken.instance == "[") {
@@ -294,6 +306,7 @@ void Nonterminal :: fn_loop() {  //done
 
 void Nonterminal :: fn_assign() {  //done
   //<assign> -> assign Identifier := <expr>
+  if (VERBOSE) cout << "call fn_assign()" << endl; 
   if (mytoken.id == KEYWORD_TK && mytoken.instance == "assign") {
     mytoken = nextToken();
     if (mytoken.id == IDENTIFIER_TK) {
@@ -312,6 +325,8 @@ void Nonterminal :: fn_assign() {  //done
 
 
 void Nonterminal :: fn_goto() {  //done
+  //<goto> -> proc Identifier
+  if (VERBOSE) cout << "call fn_goto()" << endl; 
   if (mytoken.id == KEYWORD_TK && mytoken.instance == "proc") {
     mytoken = nextToken();
     if (mytoken.id == IDENTIFIER_TK) {
@@ -325,6 +340,8 @@ void Nonterminal :: fn_goto() {  //done
 
 
 void Nonterminal :: fn_label() {  //done
+  //<label> -> void Identifier
+  if (VERBOSE) cout << "call fn_label()" << endl; 
   if (mytoken.id == KEYWORD_TK && mytoken.instance == "void") {
     mytoken = nextToken();
     if (mytoken.id == IDENTIFIER_TK) {
@@ -339,6 +356,7 @@ void Nonterminal :: fn_label() {  //done
 
 void Nonterminal :: fn_expr() {  //done
   //<expr> -> <N> - <expr> | <N>
+  if (VERBOSE) cout << "call fn_expr()" << endl; 
   nonterminal.fn_N();
   if (mytoken.id == OPERATOR_TK && mytoken.instance == "-") {
     mytoken = nextToken();
@@ -352,7 +370,8 @@ void Nonterminal :: fn_expr() {  //done
 
 void Nonterminal :: fn_N() {  //done
   //<N> -> <A> / <N> | <A> * <N> | <A>
-  nonterminal.fn_A();
+  if (VERBOSE) cout << "call fn_N()" << endl; 
+   nonterminal.fn_A();
   if (mytoken.id == OPERATOR_TK && mytoken.instance == "/") {
     mytoken = nextToken();
     nonterminal.fn_N();
@@ -369,6 +388,7 @@ void Nonterminal :: fn_N() {  //done
 
 void Nonterminal :: fn_A() {  //done
   //<A> -> <M> + <A> | <M>
+  if (VERBOSE) cout << "call fn_A()" << endl; 
   nonterminal.fn_M();
   if (mytoken.id == OPERATOR_TK && mytoken.instance == "+") {
     mytoken = nextToken();
@@ -383,6 +403,7 @@ void Nonterminal :: fn_A() {  //done
 
 void Nonterminal :: fn_M() {  //done
   //<M> -> * <M> | <R>
+  if (VERBOSE) cout << "call fn_M()" << endl; 
   if (mytoken.id == OPERATOR_TK && mytoken.instance == "*") {
     mytoken = nextToken();
     nonterminal.fn_M();
@@ -397,6 +418,7 @@ void Nonterminal :: fn_M() {  //done
 
 void Nonterminal :: fn_R() {  //done
   //<R> -> ( <expr> ) | Identifier | Integer
+  if (VERBOSE) cout << "call fn_R()" << endl; 
   if (mytoken.id == OPERATOR_TK && mytoken.instance == "(") {
     mytoken = nextToken();
     nonterminal.fn_expr();
@@ -417,6 +439,8 @@ void Nonterminal :: fn_R() {  //done
 
 
 void Nonterminal :: fn_RO() {  //done
+  //<RO> -> => | =< | == | [ == ] | %
+  if (VERBOSE) cout << "call fn_RO()" << endl; 
   if (mytoken.id == OPERATOR_TK && mytoken.instance == "=>") {
     mytoken = nextToken();
     return;

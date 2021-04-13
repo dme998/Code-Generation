@@ -19,7 +19,7 @@ using std::cout;    using std::endl;
 using std::string;  using std::vector;
 using std::ifstream;
 
-const bool DEBUG = false;  //set to true to enable verbose print statements throughout run
+const bool VERBOSE = false;  //set to true to enable verbose print statements throughout run
 
 
 /**
@@ -28,7 +28,7 @@ const bool DEBUG = false;  //set to true to enable verbose print statements thro
  * @return the completed tokens vector
  */
 void driver(const std::string &filename) {
-  if (DEBUG) cout << "Driver start." << endl;
+  if (VERBOSE) cout << "Driver start." << endl;
   
   token_t token;
   string wipstring;  //work-in-progress string to be appended-to before being passed to scanner
@@ -36,7 +36,7 @@ void driver(const std::string &filename) {
   //open file for reading
   ifstream infile(filename);  
   if (infile.is_open()) {
-    if (DEBUG) cout << "File open success." << endl;
+    if (VERBOSE) cout << "File open success." << endl;
   }
   else {
     cout << "File open error." << endl;
@@ -52,43 +52,43 @@ void driver(const std::string &filename) {
   bool inComment = false; //flag true to ignore characters until we find "$$"
   bool building = true;   //flag false once the string is built and ready to be scanned
   while(infile.get(c)) {
-    if (DEBUG) cout << "c: " << c << endl;
+    if (VERBOSE) cout << "c: " << c << endl;
     building = true;
     if (building) {
-      if (DEBUG) cout << "top of switch(" << c << ");" << endl;
+      if (VERBOSE) cout << "top of switch(" << c << ");" << endl;
       switch(c) {
         case '$':
-          if (DEBUG) cout << "case $" << endl;
+          if (VERBOSE) cout << "case $" << endl;
           infile.get(cc);
-          if (DEBUG) cout << "cc: " << cc << endl;
+          if (VERBOSE) cout << "cc: " << cc << endl;
           if (cc == '$') {
             if (!inComment) {
               inComment = true;
-              if (DEBUG) cout << "inComment = true\n";
+              if (VERBOSE) cout << "inComment = true\n";
             }
             else if (inComment) {
               inComment = false;
-              if (DEBUG) cout << "inComment = false\n";
+              if (VERBOSE) cout << "inComment = false\n";
             }
           }
           else if (!inComment) {
             wipstring.push_back(c);
-            if (DEBUG) cout << "wipstring push_back(" << c << ");" << endl;
+            if (VERBOSE) cout << "wipstring push_back(" << c << ");" << endl;
           }
           break;
         case ' ':
-          if (DEBUG) cout << "case ws." << endl;
+          if (VERBOSE) cout << "case ws." << endl;
           if (!inComment) {
-            if (DEBUG) cout << "ws-newline marks end of build." << endl;
+            if (VERBOSE) cout << "ws-newline marks end of build." << endl;
             building = false;
           }
           break;
         case '\n':
-          if (DEBUG) cout << "case newline." << endl;
-          if (DEBUG) cout << "line = " << line << endl;
+          if (VERBOSE) cout << "case newline." << endl;
+          if (VERBOSE) cout << "line = " << line << endl;
           if (!inComment) {
             addLine = true;   
-            if (DEBUG) cout << "ws-newline marks end of build." << endl;
+            if (VERBOSE) cout << "ws-newline marks end of build." << endl;
             building = false;
           }
           else {
@@ -97,16 +97,16 @@ void driver(const std::string &filename) {
           break;
         default:
           if (!inComment) {
-            if (DEBUG) cout << "case default." << endl;
+            if (VERBOSE) cout << "case default." << endl;
             wipstring.push_back(c);
-            if (DEBUG) cout << "wipstring push_back(" << c << ");" << endl;
+            if (VERBOSE) cout << "wipstring push_back(" << c << ");" << endl;
           }
           break;
       }
     } 
     //if we're done building, let's pass the assembled string and tokenize it:
     if (building == false) {
-      if (DEBUG) cout << "tokenize(" << wipstring << ");" << endl;
+      if (VERBOSE) cout << "tokenize(" << wipstring << ");" << endl;
       
       token = tokenize(wipstring, line);
       if (token.id == UNKNOWN_TK) {
@@ -124,15 +124,15 @@ void driver(const std::string &filename) {
     
   }//end of while loop
   infile.close(); 
-  if (DEBUG) cout << "File closed." << endl;
+  if (VERBOSE) cout << "File closed." << endl;
   
   //add EOF token to finalize the vector
   token.id = EOF_TK;
   token.instance = "\u0000";
   token.line = line;
   gtokens_v.push_back(token);
-  if (DEBUG) cout << "Added EOF token to final vector." << endl;  
-  if (DEBUG) cout << "Driver end." << endl;
+  if (VERBOSE) cout << "Added EOF token to final vector." << endl;  
+  if (VERBOSE) cout << "Driver end." << endl;
 }
 
 

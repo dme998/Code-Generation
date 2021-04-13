@@ -10,6 +10,39 @@ Files:          main.cpp parser.cpp parser.h driveScanner.cpp driveScanner.h
 Produces:       tmp.fs (overwrites)
 
 
+Invocation:
+  frontEnd [file]
+    file must have .fs extension
+  frontEnd [no args]
+    Prompts the user to enter stdin line-by-line to later be processed. Enter "stop" when done.
+    The user input is written to temporary file "tmp.fs" and processed immediately after write.
+
+Additional Option:
+  A global variable "const bool VERBOSE" is at the top of driveScanner.cpp, parser.cpp, and main.cpp.
+  If set to TRUE, verbose statements are printed as the program runs its course.
+  By default, parser.cpp is set to TRUE.
+
+
+Overview of functionality:
+  This program lexically analyzes a file (tokens separated by whitespace) and loads tokens into vector.
+  The vector is then processed by the parser to determine if syntax matches grammar (see below).
+
+
+Details of functionality:
+  1. main() processes cmdl arguments.
+     1a. if user specified file, then that file will be used.
+     2a. if no file is specified, main() will process stdin until user enters "stop".
+         The stdin is directed to a temporary file that will be processed by driver.
+  3. driver reads from file and acts as a filter, building strings to be passed to scanner.
+  4. scanner processes one string at a time and returns it as a token triplet:
+     {id, instance, line}.
+  5. driver pushes each token it receives from scanner into a globally-accessible vector.
+  6. Parser performs recursive decent parsing on tokens vector until EOF token is received.
+     If EOF isn't received, the parse fails.
+     Parsing is done according to BNF grammar defined below.
+
+
+
 BNF Grammar used:
 Uses only tokens detected in P1, no exceptions. 
 Some legal tokens will pass the scanner but will always lead to an error here as they are not part of this BNF

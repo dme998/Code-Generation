@@ -26,6 +26,8 @@ using namespace std;
 string implicitFileExtension(string filename);
 bool fileExists(string filename);
 vector<token_t> gtokens_v;
+const bool VERBOSE = false; //set to true to enable verbose print statements throughout run
+
 
 /**
  * Main executable to run
@@ -33,7 +35,7 @@ vector<token_t> gtokens_v;
  * @return 0 on success, 1 on nonfatal error, -1 on fatal error
  */
 int main(int argc, char *argv[]) {
-  cout << "Program start." << endl;
+  //cout << "Program start." << endl;
   
   string infile;  //this will be the filename with extension
   switch(argc) {
@@ -76,16 +78,18 @@ int main(int argc, char *argv[]) {
   driver(infile);
   
   //print tokens vector 
-  cout << "Printing final tokens vector:" << endl;
-  printTokens(gtokens_v);
+  if (VERBOSE) {
+    cout << "TOKENS:" << endl;
+    printTokens(gtokens_v);
+  }
 
-  //TODO loop through vector, parsing tokens
+  //parse tokens vector
   parser();
 
   //TODO call fn to print tree
 
 
-  cout << "Program end." << endl;
+  //cout << "Program end." << endl;
   return 0;
 }
 
