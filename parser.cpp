@@ -270,13 +270,44 @@ void Nonterminal :: fn_if() {  //done
 }
 
 
-void Nonterminal :: fn_loop() {  //TODO
-
+void Nonterminal :: fn_loop() {  //done
+  //<loop> -> loop [ <expr> <RO> <expr> ] <stat>
+  if (mytoken.id == KEYWORD_TK && mytoken.instance == "loop") {
+    mytoken = nextToken();
+    if (mytoken.id == OPERATOR_TK && mytoken.instance == "[") {
+      mytoken = nextToken();
+      nonterminal.fn_expr();
+      nonterminal.fn_RO();
+      nonterminal.fn_expr();
+      if (mytoken.id == OPERATOR_TK && mytoken.instance == "]") {
+        mytoken = nextToken();
+        nonterminal.fn_stat();
+        return;
+      }
+      else error("]", mytoken);
+    }
+    else error("[", mytoken);
+  }
+  else error("loop", mytoken);
 }
 
 
-void Nonterminal :: fn_assign() {  //TODO
-
+void Nonterminal :: fn_assign() {  //done
+  //<assign> -> assign Identifier := <expr>
+  if (mytoken.id == KEYWORD_TK && mytoken.instance == "assign") {
+    mytoken = nextToken();
+    if (mytoken.id == IDENTIFIER_TK) {
+      mytoken = nextToken();
+      if (mytoken.id == OPERATOR_TK && mytoken.instance == ":=") {
+        mytoken = nextToken();
+        nonterminal.fn_expr();
+        return;
+      }
+      else error(":=", mytoken);
+    }
+    else error(TOKENPRINTS[IDENTIFIER_TK], mytoken);
+  }
+  else error("assign", mytoken);
 }
 
 
@@ -306,8 +337,82 @@ void Nonterminal :: fn_label() {  //done
 }
 
 
-void Nonterminal :: fn_expr() {  //TODO
+void Nonterminal :: fn_expr() {  //done
+  //<expr> -> <N> - <expr> | <N>
+  nonterminal.fn_N();
+  if (mytoken.id == OPERATOR_TK && mytoken.instance == "-") {
+    mytoken = nextToken();
+    nonterminal.fn_expr();
+  }
+  else {
+    return;
+  }
+}
 
+
+void Nonterminal :: fn_N() {  //done
+  //<N> -> <A> / <N> | <A> * <N> | <A>
+  nonterminal.fn_A();
+  if (mytoken.id == OPERATOR_TK && mytoken.instance == "/") {
+    mytoken = nextToken();
+    nonterminal.fn_N();
+  }
+  else if (mytoken.id == OPERATOR_TK && mytoken.instance == "*") {
+    mytoken = nextToken();
+    nonterminal.fn_N();
+  }
+  else {
+    return;
+  }
+}
+
+
+void Nonterminal :: fn_A() {  //done
+  //<A> -> <M> + <A> | <M>
+  nonterminal.fn_M();
+  if (mytoken.id == OPERATOR_TK && mytoken.instance == "+") {
+    mytoken = nextToken();
+    nonterminal.fn_A();
+    return;
+  }
+  else {
+    return;
+  }
+}
+
+
+void Nonterminal :: fn_M() {  //done
+  //<M> -> * <M> | <R>
+  if (mytoken.id == OPERATOR_TK && mytoken.instance == "*") {
+    mytoken = nextToken();
+    nonterminal.fn_M();
+    return;
+  }
+  else {
+    nonterminal.fn_R();
+    return;
+  }
+}
+
+
+void Nonterminal :: fn_R() {  //done
+  //<R> -> ( <expr> ) | Identifier | Integer
+  if (mytoken.id == OPERATOR_TK && mytoken.instance == "(") {
+    mytoken = nextToken();
+    nonterminal.fn_expr();
+    if (mytoken.id == OPERATOR_TK && mytoken.instance == ")") {
+      mytoken = nextToken();
+      return;
+    }
+  }
+  else if (mytoken.id == IDENTIFIER_TK) {
+    mytoken = nextToken();
+    return;
+  }
+  else if (mytoken.id == INTEGER_TK) {
+    mytoken = nextToken();
+    return;
+  }
 }
 
 
