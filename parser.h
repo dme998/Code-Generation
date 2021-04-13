@@ -13,14 +13,15 @@
 #define PARSER_H
 #include "ptree.h"
 
-ParseTree parser();
+ParseTree parser(vector<token_t> tokens_v);
+token_t nextToken(vector<string> &tokens_v);
 
 class Nonterminal {
   public:
 
     //constructor
     Nonterminal() {
-
+      
     }
     
     /* functions for each nonterminal

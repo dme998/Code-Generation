@@ -15,20 +15,24 @@
 #include "parser.h"
 #include "ptree.h"
 
+static int vindex = 0;  //position in the tokens vector (vector index)
+
 /**
  * auxillary function that parses tokens according to BNF
  * @param tokens_v tokens vector built by lexical analyzer
  * @return completed parse tree
  */
 ParseTree parser(vector<token_t> tokens_v) {
-  Nonterminal nonterminal;
+  printf("parser launch\n");
+  
+  Nonterminal obj;
   ParseTree mytree;
   token_t mytoken;
-  printf("parser launch\n");
 
-  mytoken = tokens_v[0];
+  mytoken = nextToken(tokens_v);
   nonterminal.fn_program();
   if (mytoken.id == EOF_TK) {
+    printf("EOF token received\n");
     return mytree;
   }
   else {
@@ -39,8 +43,27 @@ ParseTree parser(vector<token_t> tokens_v) {
 }
 
 
+/**
+ * gets next token from vector and then iterates vector index
+ * @param tokens_v reference to tokens vector built by lexical analyzer
+ * @return next token in the vector
+ */
+token_t nextToken(vector<string> &tokens_v) {
+  try {
+    token_t token = tokens_v.at(pos);
+  }
+  catch(std::out_of_range e) {
+    printf("Error: caught out_of_range exception. Next token doesn't exist. Terminating.\n");
+    exit(1);
+  }
+  vindex++;
+  return token;
+}
+
 void Nonterminal :: fn_program() {
-  
+  if (token.id == ?) {
+    token = nextToken();
+  }
 }
 
 void Nonterminal :: fn_block() {
