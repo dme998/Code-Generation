@@ -27,10 +27,9 @@ const bool DEBUG = false;  //set to true to enable verbose print statements thro
  * @param filename name of file to be run through scanner
  * @return the completed tokens vector
  */
-vector<token_t> driver(const std::string &filename) {
+void driver(const std::string &filename) {
   if (DEBUG) cout << "Driver start." << endl;
   
-  vector<token_t> tokens_v;  //vector to hold all tokens received by scanner
   token_t token;
   string wipstring;  //work-in-progress string to be appended-to before being passed to scanner
 
@@ -116,7 +115,7 @@ vector<token_t> driver(const std::string &filename) {
         exit(1);
       }
       if (token.id != WHITESPACE_TK) {
-        tokens_v.push_back(token);
+        gtokens_v.push_back(token);
       }
       wipstring = "";  //empty out string so we can build the next one
       if (addLine) line++;  //increment line number if newline char was found earlier
@@ -131,11 +130,9 @@ vector<token_t> driver(const std::string &filename) {
   token.id = EOF_TK;
   token.instance = "\u0000";
   token.line = line;
-  tokens_v.push_back(token);
+  gtokens_v.push_back(token);
   if (DEBUG) cout << "Added EOF token to final vector." << endl;  
   if (DEBUG) cout << "Driver end." << endl;
-
-  return tokens_v;
 }
 
 

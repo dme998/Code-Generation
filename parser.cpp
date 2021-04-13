@@ -19,10 +19,9 @@ static int vindex = 0;  //position in the tokens vector (vector index)
 
 /**
  * auxillary function that parses tokens according to BNF
- * @param tokens_v tokens vector built by lexical analyzer
  * @return completed parse tree
  */
-ParseTree parser(vector<token_t> tokens_v) {
+ParseTree parser() {
   printf("parser launch\n");
   
   Nonterminal obj;
@@ -44,13 +43,12 @@ ParseTree parser(vector<token_t> tokens_v) {
 
 
 /**
- * gets next token from vector and then iterates vector index
- * @param tokens_v reference to tokens vector built by lexical analyzer
+ * gets next token from global tokens vector and then iterates global vector index
  * @return next token in the vector
  */
-token_t nextToken(vector<string> &tokens_v) {
+token_t nextToken() {
   try {
-    token_t token = tokens_v.at(pos);
+    token_t token = gtokens_v.at(pos);
   }
   catch(std::out_of_range e) {
     printf("Error: caught out_of_range exception. Next token doesn't exist. Terminating.\n");

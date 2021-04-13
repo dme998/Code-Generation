@@ -14,13 +14,14 @@
 #include <string>
 #include "token.h"
 
+extern std::vector<token_t> gtokens_v;
 
 /**
  * drives the scanner to lexically analyze a file until EOF
+ * and build global tokens vector gtokens_v
  * @param filename name of file to be run through scanner
- * @return the completed tokens vector
  */
-vector<token_t> driver(const std::string &filename);
+void driver(const std::string &filename);
 
 
 /**

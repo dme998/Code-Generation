@@ -25,6 +25,7 @@ using namespace std;
 
 string implicitFileExtension(string filename);
 bool fileExists(string filename);
+vector<token_t> gtokens_v;
 
 /**
  * Main executable to run
@@ -71,8 +72,8 @@ int main(int argc, char *argv[]) {
       break;
   }
   
-  //run driveScanner driver to get final tokens vector
-  vector<token_t> tokens_v = driver(infile);
+  //run driveScanner driver to build final tokens vector
+  driver(infile);
   
   //print tokens vector 
   cout << "\nPrinting final tokens vector:" << endl;

@@ -13,8 +13,9 @@
 #define PARSER_H
 #include "ptree.h"
 
-ParseTree parser(vector<token_t> tokens_v);
-token_t nextToken(vector<string> &tokens_v);
+extern std::vector<token_t> gtokens_v;
+ParseTree parser();
+token_t nextToken();
 
 class Nonterminal {
   public:
