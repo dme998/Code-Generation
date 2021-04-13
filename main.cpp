@@ -77,10 +77,10 @@ int main(int argc, char *argv[]) {
   
   //print tokens vector 
   cout << "\nPrinting final tokens vector:" << endl;
-  printTokens(tokens_v);
+  printTokens(gtokens_v);
 
   //TODO loop through vector, parsing tokens
-  parser(tokens_v);
+  parser();
 
   //TODO call fn to print tree
 
