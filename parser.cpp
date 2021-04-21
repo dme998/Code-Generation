@@ -24,23 +24,22 @@ const bool VERBOSE = true;  //set to true to enable verbose print statements thr
  * auxillary function that parses tokens according to BNF
  * @return completed parse tree
  */
-ParseTree parser() {
+Node* parser() {
   //printf("parser launch\n");
   
-  ParseTree mytree;
-
+  Node* root;
   mytoken = nextToken();
-  nonterminal.fn_program();
+  root = nonterminal.fn_program();
   if (mytoken.id == EOF_TK) {
     printf("EOF token received.\nParse OK.\n");
-    return mytree;
+    return root;
   }
   else {
     printf("Error: EOF_TK expected, not received. Terminating.\n");
     exit(1);
   }
   
-  return mytree;
+  return root;
 }
 
 
@@ -69,17 +68,36 @@ void error(string exp, token_t tk) {
 
 
 /**
+ * create a new node
+ * @param label the calling function's name
+ * @return the node
+ */
+Node* addNode(std::string label) {
+  Node* p = new node();
+  p->label = label;
+  p->n0 = NULL;
+  p->n1 = NULL;
+  p->n2 = NULL;
+  p->n3 = NULL;
+  
+  return p;
+}
+
+
+/**
  * Nonterminal member functions for recursive descent 
  * @return void (explicit)
  */
-void Nonterminal :: fn_program() { //done
+Node* Nonterminal :: fn_program() { //done
   //<program> -> <vars> main <block>
+  
+  Node* node = addNode("program");
   if (VERBOSE) cout << "call fn_program()" << endl;
-  nonterminal.fn_vars();
+  node->n0 = nonterminal.fn_vars();
   if (mytoken.id == KEYWORD_TK && mytoken.instance == "main") {
     mytoken = nextToken();
     nonterminal.fn_block();
-    return;
+    return node;
   }
   else {
     error("main", mytoken);
@@ -87,7 +105,7 @@ void Nonterminal :: fn_program() { //done
 }
 
 
-void Nonterminal :: fn_block() {  //done
+Node* Nonterminal :: fn_block() {  //done
   //<block> -> begin <vars> <stats> end
   if (VERBOSE) cout << "call fn_block()" << endl;
   if (mytoken.id == KEYWORD_TK && mytoken.instance == "begin") {
@@ -105,7 +123,7 @@ void Nonterminal :: fn_block() {  //done
 }
 
 
-void Nonterminal :: fn_vars() {  //done
+Node* Nonterminal :: fn_vars() {  //done
   //<vars> -> epsilon | data Identifier := Integer ; <vars>
   if (VERBOSE) cout << "call fn_vars()" << endl;
   if (mytoken.id == KEYWORD_TK && mytoken.instance == "main") {  //epsilon: Follow(vars)
@@ -138,7 +156,7 @@ void Nonterminal :: fn_vars() {  //done
 }
 
 
-void Nonterminal :: fn_stats() {  //done
+Node* Nonterminal :: fn_stats() {  //done
   //<stats> -> <stat> <mStat>
   if (VERBOSE) cout << "call fn_stats()" << endl;
   nonterminal.fn_stat();
@@ -147,7 +165,7 @@ void Nonterminal :: fn_stats() {  //done
 }
 
 
-void Nonterminal :: fn_mStat() {  //done
+Node* Nonterminal :: fn_mStat() {  //done
   //<mStat> -> epsilon | <stat> <mStat>
   if (VERBOSE) cout << "call fn_mStat()" << endl;
   if (mytoken.instance == "end") {  //epsilon: Follow(mStat)
@@ -161,7 +179,7 @@ void Nonterminal :: fn_mStat() {  //done
 } 
 
 
-void Nonterminal :: fn_stat() {  //done
+Node* Nonterminal :: fn_stat() {  //done
   //<stat> -> <in> ; | <out> ; | <block> | <if> ; | <loop> ; | <assign> ; | <goto> ; | <label> ;
   if (VERBOSE) cout << "call fn_stat()" << endl;
   if (mytoken.id == KEYWORD_TK && mytoken.instance == "getter") { //First(in)
@@ -208,7 +226,8 @@ void Nonterminal :: fn_stat() {  //done
     }
     else error(";", mytoken);
   }
-  else if (mytoken.id == KEYWORD_TK && mytoken.instance == "proc" ) {  //First(goto)
+  else if (mytoken.id == //set to true to enable verbose print statements throughout run
+KEYWORD_TK && mytoken.instance == "proc" ) {  //First(goto)
     nonterminal.fn_goto();
     if (mytoken.id == OPERATOR_TK && mytoken.instance == ";") {
       mytoken = nextToken();
@@ -227,7 +246,7 @@ void Nonterminal :: fn_stat() {  //done
 } 
 
 
-void Nonterminal :: fn_in() {  //done
+Node* Nonterminal :: fn_in() {  //done
   //<in> -> getter Identifier
   if (VERBOSE) cout << "call fn_in()" << endl;
   if (mytoken.id == KEYWORD_TK && mytoken.instance == "getter") {
@@ -242,7 +261,7 @@ void Nonterminal :: fn_in() {  //done
 }
 
 
-void Nonterminal :: fn_out() {  //done
+Node* Nonterminal :: fn_out() {  //done
   //<out> -> outter <expr>
   if (VERBOSE) cout << "call fn_out()" << endl;
   if (mytoken.id == KEYWORD_TK && mytoken.instance == "outter") {
@@ -254,7 +273,7 @@ void Nonterminal :: fn_out() {  //done
 }
 
 
-void Nonterminal :: fn_if() {  //done
+Node* Nonterminal :: fn_if() {  //done
   //<if> -> if [ <expr> ] <RO> <expr> ] <stat>
   if (VERBOSE) cout << "call fn_if()" << endl;
   if (mytoken.id == KEYWORD_TK && mytoken.instance == "if") {
@@ -281,7 +300,7 @@ void Nonterminal :: fn_if() {  //done
 }
 
 
-void Nonterminal :: fn_loop() {  //done
+Node* Nonterminal :: fn_loop() {  //done
   //<loop> -> loop [ <expr> <RO> <expr> ] <stat>
   if (VERBOSE) cout << "call fn_loop()" << endl; 
   if (mytoken.id == KEYWORD_TK && mytoken.instance == "loop") {
@@ -304,7 +323,7 @@ void Nonterminal :: fn_loop() {  //done
 }
 
 
-void Nonterminal :: fn_assign() {  //done
+Node* Nonterminal :: fn_assign() {  //done
   //<assign> -> assign Identifier := <expr>
   if (VERBOSE) cout << "call fn_assign()" << endl; 
   if (mytoken.id == KEYWORD_TK && mytoken.instance == "assign") {
@@ -324,7 +343,7 @@ void Nonterminal :: fn_assign() {  //done
 }
 
 
-void Nonterminal :: fn_goto() {  //done
+Node* Nonterminal :: fn_goto() {  //done
   //<goto> -> proc Identifier
   if (VERBOSE) cout << "call fn_goto()" << endl; 
   if (mytoken.id == KEYWORD_TK && mytoken.instance == "proc") {
@@ -339,7 +358,7 @@ void Nonterminal :: fn_goto() {  //done
 }
 
 
-void Nonterminal :: fn_label() {  //done
+Node* Nonterminal :: fn_label() {  //done
   //<label> -> void Identifier
   if (VERBOSE) cout << "call fn_label()" << endl; 
   if (mytoken.id == KEYWORD_TK && mytoken.instance == "void") {
@@ -354,7 +373,7 @@ void Nonterminal :: fn_label() {  //done
 }
 
 
-void Nonterminal :: fn_expr() {  //done
+Node* Nonterminal :: fn_expr() {  //done
   //<expr> -> <N> - <expr> | <N>
   if (VERBOSE) cout << "call fn_expr()" << endl; 
   nonterminal.fn_N();
@@ -368,7 +387,7 @@ void Nonterminal :: fn_expr() {  //done
 }
 
 
-void Nonterminal :: fn_N() {  //done
+Node* Nonterminal :: fn_N() {  //done
   //<N> -> <A> / <N> | <A> * <N> | <A>
   if (VERBOSE) cout << "call fn_N()" << endl; 
    nonterminal.fn_A();
@@ -386,7 +405,7 @@ void Nonterminal :: fn_N() {  //done
 }
 
 
-void Nonterminal :: fn_A() {  //done
+Node* Nonterminal :: fn_A() {  //done
   //<A> -> <M> + <A> | <M>
   if (VERBOSE) cout << "call fn_A()" << endl; 
   nonterminal.fn_M();
@@ -401,7 +420,7 @@ void Nonterminal :: fn_A() {  //done
 }
 
 
-void Nonterminal :: fn_M() {  //done
+Node* Nonterminal :: fn_M() {  //done
   //<M> -> * <M> | <R>
   if (VERBOSE) cout << "call fn_M()" << endl; 
   if (mytoken.id == OPERATOR_TK && mytoken.instance == "*") {
@@ -416,7 +435,7 @@ void Nonterminal :: fn_M() {  //done
 }
 
 
-void Nonterminal :: fn_R() {  //done
+Node* Nonterminal :: fn_R() {  //done
   //<R> -> ( <expr> ) | Identifier | Integer
   if (VERBOSE) cout << "call fn_R()" << endl; 
   if (mytoken.id == OPERATOR_TK && mytoken.instance == "(") {
@@ -438,7 +457,7 @@ void Nonterminal :: fn_R() {  //done
 }
 
 
-void Nonterminal :: fn_RO() {  //done
+Node* Nonterminal :: fn_RO() {  //done
   //<RO> -> => | =< | == | [ == ] | %
   if (VERBOSE) cout << "call fn_RO()" << endl; 
   if (mytoken.id == OPERATOR_TK && mytoken.instance == "=>") {

@@ -14,9 +14,10 @@
 #include "ptree.h"
 
 extern std::vector<token_t> gtokens_v;
-ParseTree parser();
+Node* parser();
 token_t nextToken();
 void error(string exp, token_t tk);
+Node* addNode(std::string label);
 
 class Nonterminal {
   public:
@@ -31,25 +32,25 @@ class Nonterminal {
      * syntactic TKs (e.g. begin, end) can be thrown away; all others (ops, IDs, numbers) are stored in the node.
      * every node has label consistent with the name of the function creating it
      */
-    void fn_program(); //priority
-    void fn_block(); //priority
-    void fn_vars(); //priority
-    void fn_expr();
-    void fn_N();
-    void fn_A();
-    void fn_M();
-    void fn_R();
-    void fn_stats(); //priority
-    void fn_mStat(); //priority
-    void fn_stat(); //priority
-    void fn_in(); //priority
-    void fn_out();
-    void fn_if();
-    void fn_loop();
-    void fn_assign();
-    void fn_RO();
-    void fn_label();
-    void fn_goto();
+    Node* fn_program(); //priority
+    Node* fn_block(); //priority
+    Node* fn_vars(); //priority
+    Node* fn_expr();
+    Node* fn_N();
+    Node* fn_A();
+    Node* fn_M();
+    Node* fn_R();
+    Node* fn_stats(); //priority
+    Node* fn_mStat(); //priority
+    Node* fn_stat(); //priority
+    Node* fn_in(); //priority
+    Node* fn_out();
+    Node* fn_if();
+    Node* fn_loop();
+    Node* fn_assign();
+    Node* fn_RO();
+    Node* fn_label();
+    Node* fn_goto();
 };
 
 #endif

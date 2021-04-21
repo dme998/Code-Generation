@@ -17,45 +17,17 @@
 using std::cout;
 using std::endl;
 
-class Node {
-  public:
-
+struct Node {
     token_t token;
     std::string label; //string literal of the nonterminal function (e.g. "block", "mStat")
     int level;  //how deep the node is in the tree
-    Node* left;
-    Node* right;
-
-    //constructor
-    Node() {
-      label = "?NT";
-      left = NULL;
-      right = NULL;
-    }
-    Node(std::string l) {
-      label = l; //e.g. "block" or "mStat"
-      left = NULL;
-      right = NULL;
-    }
-};
-
-class ParseTree {    
-  public: 
-    Node *root;
-    int nodecount = 0;  //running total of nodes created
     
-    //constructor
-    ParseTree() {
-      root = NULL;
-    }
-
-    void printLeftRight(Node *root, int column) {
-      //TODO
-    }
-
-    void addNode(Node *newnode) {
-      //TODO
-    }
+    //child nodes
+    Node* n0;
+    Node* n1;
+    Node* n2;
+    Node* n3;
 };
+
 
 #endif
