@@ -24,6 +24,28 @@ class Node {
     Node* n1;
     Node* n2;
     Node* n3;
+    
+    //recursive function to traverse and print tree in preorder
+    void print(Node* node, int level) {
+      string line;
+      for(int i = 0; i < 1; i++) {
+        if (node == NULL) {
+          return;
+        }
+        else {
+          for(int counter = 0; counter < level; counter++) {
+            line.append("  ");
+          } 
+          line.append(node->label + " ");
+          std::cout << line << std::endl;
+          print(node->n0, level + 1); 
+          print(node->n1, level + 1); 
+          print(node->n2, level + 1); 
+          print(node->n3, level + 1); 
+        }
+      }
+    }
+    
 };
 
 

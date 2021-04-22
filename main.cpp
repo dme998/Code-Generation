@@ -85,10 +85,8 @@ int main(int argc, char *argv[]) {
   }
 
   //parse tokens vector
-  parser();
-
-  //TODO call fn to print tree
-
+  Node* mytree = parser();
+  mytree->print(mytree, 0);
 
   //cout << "Program end." << endl;
   return 0;
