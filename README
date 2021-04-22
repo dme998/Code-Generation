@@ -37,9 +37,11 @@ Details of functionality:
   4. scanner processes one string at a time and returns it as a token triplet:
      {id, instance, line}.
   5. driver pushes each token it receives from scanner into a globally-accessible vector.
-  6. Parser performs recursive decent parsing on tokens vector until EOF token is received.
+  6. Parser performs recursive descent parsing on tokens vector until EOF token is received.
      If EOF isn't received, the parse fails.
      Parsing is done according to BNF grammar defined below.
+  7. If VERBOSE flag is set in parser.cpp, tokens will be printed during recursive descent.
+  8. The finished parse tree is passed back to main() and then printed in preorder traversal. 
 
 
 
