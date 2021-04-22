@@ -73,7 +73,7 @@ void error(string exp, token_t tk) {
  * @return the node
  */
 Node* addNode(std::string label) {
-  Node* p = new node();
+  Node* p = new Node();
   p->label = label;
   p->n0 = NULL;
   p->n1 = NULL;
@@ -86,18 +86,19 @@ Node* addNode(std::string label) {
 
 /**
  * Nonterminal member functions for recursive descent 
- * @return void (explicit)
+ * @return either pointer to allocated node with defined properties OR NULL
  */
 Node* Nonterminal :: fn_program() { //done
   //<program> -> <vars> main <block>
-  
-  Node* node = addNode("program");
   if (VERBOSE) cout << "call fn_program()" << endl;
-  node->n0 = nonterminal.fn_vars();
+  
+  Node* p = addNode("program");
+  p->n0 = nonterminal.fn_vars();
   if (mytoken.id == KEYWORD_TK && mytoken.instance == "main") {
+    p->token = mytoken;
     mytoken = nextToken();
-    nonterminal.fn_block();
-    return node;
+    p->n1 = nonterminal.fn_block();
+    return p;
   }
   else {
     error("main", mytoken);
@@ -108,16 +109,20 @@ Node* Nonterminal :: fn_program() { //done
 Node* Nonterminal :: fn_block() {  //done
   //<block> -> begin <vars> <stats> end
   if (VERBOSE) cout << "call fn_block()" << endl;
+
+  Node* p = addNode("block");
   if (mytoken.id == KEYWORD_TK && mytoken.instance == "begin") {
+    p->token = mytoken;
     mytoken = nextToken();
-    nonterminal.fn_vars();
-    nonterminal.fn_stats();
+    p->n0 = nonterminal.fn_vars();
+    p->n1 = nonterminal.fn_stats();
     if (mytoken.id == KEYWORD_TK && mytoken.instance == "end") {
+      p->token = mytoken;
       mytoken = nextToken();
-      return;
+      return p;
     }
     else error("end", mytoken);
-    return;
+    return p;
   }
   else error("begin", mytoken);
 }
@@ -126,23 +131,30 @@ Node* Nonterminal :: fn_block() {  //done
 Node* Nonterminal :: fn_vars() {  //done
   //<vars> -> epsilon | data Identifier := Integer ; <vars>
   if (VERBOSE) cout << "call fn_vars()" << endl;
+  
   if (mytoken.id == KEYWORD_TK && mytoken.instance == "main") {  //epsilon: Follow(vars)
     //do not consume tokens for follow sets
-    return;
+    return NULL;
   }
 
+  Node* p = addNode("vars");
   if (mytoken.instance == "data") {
+    p->token = mytoken;
     mytoken = nextToken();
     if (mytoken.id == IDENTIFIER_TK) {
+      p->token = mytoken;
       mytoken = nextToken();
       if (mytoken.id == OPERATOR_TK && mytoken.instance == ":=") {
+        p->token = mytoken;
         mytoken = nextToken();
         if (mytoken.id == INTEGER_TK) {
+          p->token = mytoken;
           mytoken = nextToken();
           if (mytoken.id == OPERATOR_TK && mytoken.instance == ";") {
+            p->token = mytoken;
             mytoken = nextToken();
-            nonterminal.fn_vars();
-            return;
+            p->n0 = nonterminal.fn_vars();
+            return p;
           }
           else error(";", mytoken);
         }
@@ -159,87 +171,100 @@ Node* Nonterminal :: fn_vars() {  //done
 Node* Nonterminal :: fn_stats() {  //done
   //<stats> -> <stat> <mStat>
   if (VERBOSE) cout << "call fn_stats()" << endl;
-  nonterminal.fn_stat();
-  nonterminal.fn_mStat();
-  return;
+  
+  Node* p = addNode("stats");
+  p->n0 = nonterminal.fn_stat();
+  p->n1 = nonterminal.fn_mStat();
+  return p;
 }
 
 
 Node* Nonterminal :: fn_mStat() {  //done
   //<mStat> -> epsilon | <stat> <mStat>
   if (VERBOSE) cout << "call fn_mStat()" << endl;
+
+  Node* p = addNode("mStat");
   if (mytoken.instance == "end") {  //epsilon: Follow(mStat)
     //do not consume tokens for follow sets
-    return;
+    return NULL;
   }
   else {
-    nonterminal.fn_stat();
-    nonterminal.fn_mStat();
+    p->n0 = nonterminal.fn_stat();
+    p->n1 = nonterminal.fn_mStat();
   }
 } 
 
-
+//TODO HERE ONWARD
 Node* Nonterminal :: fn_stat() {  //done
   //<stat> -> <in> ; | <out> ; | <block> | <if> ; | <loop> ; | <assign> ; | <goto> ; | <label> ;
   if (VERBOSE) cout << "call fn_stat()" << endl;
+
+	Node* p = addNode("stat");
   if (mytoken.id == KEYWORD_TK && mytoken.instance == "getter") { //First(in)
-    nonterminal.fn_in();
+    p->n0 = nonterminal.fn_in();
     if (mytoken.id == OPERATOR_TK && mytoken.instance == ";") {
-      mytoken = nextToken();
-      return;
+      p->token = mytoken;
+			mytoken = nextToken();
+      return p;
     }
     else error(";", mytoken);
   }
   else if (mytoken.id == KEYWORD_TK && mytoken.instance == "outter") { //First(out)
-    nonterminal.fn_out(); 
+    p->n0 = nonterminal.fn_out(); 
     if (mytoken.id == OPERATOR_TK && mytoken.instance == ";") {
-      mytoken = nextToken();
-      return;
+      p->token = mytoken;
+			mytoken = nextToken();
+      return p;
     }
     else error(";", mytoken);
   }
   else if (mytoken.id == KEYWORD_TK && mytoken.instance == "begin") {  //First(block)
-    nonterminal.fn_block();
-    return;
+    p->n0 = nonterminal.fn_block();
+    return p;
   }
   else if (mytoken.id == KEYWORD_TK && mytoken.instance == "if" ) {  //First(if)
-    nonterminal.fn_if();
+    p->n0 = nonterminal.fn_if();
     if (mytoken.id == OPERATOR_TK && mytoken.instance == ";") {
-      mytoken = nextToken();
-      return;
+      p->token = mytoken;
+			mytoken = nextToken();
+      return p;
     }
     else error(";", mytoken);
   }
   else if (mytoken.id == KEYWORD_TK && mytoken.instance == "loop" ) {  //First(loop)
-    nonterminal.fn_loop(); 
+    p->n0 = nonterminal.fn_loop(); 
     if (mytoken.id == OPERATOR_TK && mytoken.instance == ";") {
-      mytoken = nextToken();
-      return;
+      p->token = mytoken;
+			mytoken = nextToken();
+      return p;
     }
     else error(";", mytoken);
   }
   else if (mytoken.id == KEYWORD_TK && mytoken.instance == "assign" ) {  //First(assign)
-    nonterminal.fn_assign();
+    p->n0 = nonterminal.fn_assign();
     if (mytoken.id == OPERATOR_TK && mytoken.instance == ";") {
-      mytoken = nextToken();
-      return;
+      p->token = mytoken;
+			mytoken = nextToken();
+      return p;
     }
     else error(";", mytoken);
   }
   else if (mytoken.id == //set to true to enable verbose print statements throughout run
 KEYWORD_TK && mytoken.instance == "proc" ) {  //First(goto)
-    nonterminal.fn_goto();
+    p->n0 = nonterminal.fn_goto();
     if (mytoken.id == OPERATOR_TK && mytoken.instance == ";") {
-      mytoken = nextToken();
-      return;
+      p->token = mytoken;
+			mytoken = nextToken();
+      return p;
     }
     else error(";", mytoken);
   }
   else if (mytoken.id == KEYWORD_TK && mytoken.instance == "void" ) {  //First(label)
-    nonterminal.fn_label();
+    p->n0 = nonterminal.fn_label();
     if (mytoken.id == OPERATOR_TK && mytoken.instance == ";") {
-      mytoken = nextToken();
-      return;
+      p->token = mytoken;
+			mytoken = nextToken();
+      return p;
     }
     else error(";", mytoken);
   }
@@ -249,11 +274,15 @@ KEYWORD_TK && mytoken.instance == "proc" ) {  //First(goto)
 Node* Nonterminal :: fn_in() {  //done
   //<in> -> getter Identifier
   if (VERBOSE) cout << "call fn_in()" << endl;
+
+	Node* p = addNode("in");
   if (mytoken.id == KEYWORD_TK && mytoken.instance == "getter") {
-    mytoken = nextToken();
+    p->token = mytoken;
+		mytoken = nextToken();
     if (mytoken.id == IDENTIFIER_TK) {    
-      mytoken = nextToken();
-      return;
+      p->token = mytoken;
+			mytoken = nextToken();
+      return p;
     }
     else error(TOKENPRINTS[IDENTIFIER_TK], mytoken);
   }
@@ -264,10 +293,13 @@ Node* Nonterminal :: fn_in() {  //done
 Node* Nonterminal :: fn_out() {  //done
   //<out> -> outter <expr>
   if (VERBOSE) cout << "call fn_out()" << endl;
+
+	Node* p = addNode("out");
   if (mytoken.id == KEYWORD_TK && mytoken.instance == "outter") {
-    mytoken = nextToken();
-    nonterminal.fn_expr();
-    return;
+    p->token = mytoken;
+		mytoken = nextToken();
+    p->n0 = nonterminal.fn_expr();
+    return p;
   }
   else error("outter", mytoken);
 }
@@ -276,19 +308,25 @@ Node* Nonterminal :: fn_out() {  //done
 Node* Nonterminal :: fn_if() {  //done
   //<if> -> if [ <expr> ] <RO> <expr> ] <stat>
   if (VERBOSE) cout << "call fn_if()" << endl;
+
+	Node* p = addNode("if");
   if (mytoken.id == KEYWORD_TK && mytoken.instance == "if") {
-    mytoken = nextToken();
+    p->token = mytoken;
+		mytoken = nextToken();
     if (mytoken.id == OPERATOR_TK  && mytoken.instance == "[") {
-      mytoken = nextToken();
-      nonterminal.fn_expr();
-      nonterminal.fn_RO();
-      nonterminal.fn_expr();
+      p->token = mytoken;
+			mytoken = nextToken();
+      p->n0 = nonterminal.fn_expr();
+      p->n1 = nonterminal.fn_RO();
+      p->n2 = nonterminal.fn_expr();
       if (mytoken.id == OPERATOR_TK && mytoken.instance == "]") {
-        mytoken = nextToken();
+        p->token = mytoken;
+			  mytoken = nextToken();
         if (mytoken.id == KEYWORD_TK && mytoken.instance == "then") {
-          mytoken = nextToken();
-          nonterminal.fn_stat();
-          return;
+          p->token = mytoken;
+			    mytoken = nextToken();
+          p->n3 = nonterminal.fn_stat();
+          return p;
         }
         else error("then", mytoken);
       }
@@ -302,18 +340,23 @@ Node* Nonterminal :: fn_if() {  //done
 
 Node* Nonterminal :: fn_loop() {  //done
   //<loop> -> loop [ <expr> <RO> <expr> ] <stat>
-  if (VERBOSE) cout << "call fn_loop()" << endl; 
+  if (VERBOSE) cout << "call fn_loop()" << endl;
+
+	Node* p = addNode("loop"); 
   if (mytoken.id == KEYWORD_TK && mytoken.instance == "loop") {
-    mytoken = nextToken();
+    p->token = mytoken;
+		mytoken = nextToken();
     if (mytoken.id == OPERATOR_TK && mytoken.instance == "[") {
-      mytoken = nextToken();
-      nonterminal.fn_expr();
-      nonterminal.fn_RO();
-      nonterminal.fn_expr();
+      p->token = mytoken;
+			mytoken = nextToken();
+      p->n0 = nonterminal.fn_expr();
+      p->n1 = nonterminal.fn_RO();
+      p->n2 = nonterminal.fn_expr();
       if (mytoken.id == OPERATOR_TK && mytoken.instance == "]") {
-        mytoken = nextToken();
-        nonterminal.fn_stat();
-        return;
+        p->token = mytoken;
+			  mytoken = nextToken();
+        p->n3 = nonterminal.fn_stat();
+        return p;
       }
       else error("]", mytoken);
     }
@@ -325,15 +368,20 @@ Node* Nonterminal :: fn_loop() {  //done
 
 Node* Nonterminal :: fn_assign() {  //done
   //<assign> -> assign Identifier := <expr>
-  if (VERBOSE) cout << "call fn_assign()" << endl; 
+  if (VERBOSE) cout << "call fn_assign()" << endl;
+
+	Node* p = addNode("assign"); 
   if (mytoken.id == KEYWORD_TK && mytoken.instance == "assign") {
-    mytoken = nextToken();
+    p->token = mytoken;
+		mytoken = nextToken();
     if (mytoken.id == IDENTIFIER_TK) {
-      mytoken = nextToken();
+      p->token = mytoken;
+			mytoken = nextToken();
       if (mytoken.id == OPERATOR_TK && mytoken.instance == ":=") {
-        mytoken = nextToken();
-        nonterminal.fn_expr();
-        return;
+        p->token = mytoken;
+			  mytoken = nextToken();
+        p->n0 = nonterminal.fn_expr();
+        return p;
       }
       else error(":=", mytoken);
     }
@@ -345,12 +393,16 @@ Node* Nonterminal :: fn_assign() {  //done
 
 Node* Nonterminal :: fn_goto() {  //done
   //<goto> -> proc Identifier
-  if (VERBOSE) cout << "call fn_goto()" << endl; 
+  if (VERBOSE) cout << "call fn_goto()" << endl;
+
+	Node* p = addNode("goto"); 
   if (mytoken.id == KEYWORD_TK && mytoken.instance == "proc") {
-    mytoken = nextToken();
+    p->token = mytoken;
+		mytoken = nextToken();
     if (mytoken.id == IDENTIFIER_TK) {
-      mytoken = nextToken();
-      return;
+      p->token = mytoken;
+			mytoken = nextToken();
+      return p;
     }
     else error(TOKENPRINTS[IDENTIFIER_TK], mytoken);
   }
@@ -360,12 +412,16 @@ Node* Nonterminal :: fn_goto() {  //done
 
 Node* Nonterminal :: fn_label() {  //done
   //<label> -> void Identifier
-  if (VERBOSE) cout << "call fn_label()" << endl; 
+  if (VERBOSE) cout << "call fn_label()" << endl;
+
+	Node* p = addNode("label"); 
   if (mytoken.id == KEYWORD_TK && mytoken.instance == "void") {
-    mytoken = nextToken();
+    p->token = mytoken;
+		mytoken = nextToken();
     if (mytoken.id == IDENTIFIER_TK) {
-      mytoken = nextToken();
-      return;
+      p->token = mytoken;
+			mytoken = nextToken();
+      return p;
     }
     else error(TOKENPRINTS[IDENTIFIER_TK], mytoken);
   }
@@ -375,118 +431,146 @@ Node* Nonterminal :: fn_label() {  //done
 
 Node* Nonterminal :: fn_expr() {  //done
   //<expr> -> <N> - <expr> | <N>
-  if (VERBOSE) cout << "call fn_expr()" << endl; 
-  nonterminal.fn_N();
+  if (VERBOSE) cout << "call fn_expr()" << endl;
+
+	Node* p = addNode("expr"); 
+  p->n0 = nonterminal.fn_N();
   if (mytoken.id == OPERATOR_TK && mytoken.instance == "-") {
-    mytoken = nextToken();
-    nonterminal.fn_expr();
+    p->token = mytoken;
+		mytoken = nextToken();
+    p->n1 = nonterminal.fn_expr();
   }
   else {
-    return;
+    return p;
   }
 }
 
 
 Node* Nonterminal :: fn_N() {  //done
   //<N> -> <A> / <N> | <A> * <N> | <A>
-  if (VERBOSE) cout << "call fn_N()" << endl; 
-   nonterminal.fn_A();
+  if (VERBOSE) cout << "call fn_N()" << endl;
+
+	Node* p = addNode("N"); 
+  p->n0 = nonterminal.fn_A();
   if (mytoken.id == OPERATOR_TK && mytoken.instance == "/") {
-    mytoken = nextToken();
-    nonterminal.fn_N();
+    p->token = mytoken;
+		mytoken = nextToken();
+    p->n1 = nonterminal.fn_N();
   }
   else if (mytoken.id == OPERATOR_TK && mytoken.instance == "*") {
-    mytoken = nextToken();
-    nonterminal.fn_N();
+    p->token = mytoken;
+		mytoken = nextToken();
+    p->n1 = nonterminal.fn_N();
   }
   else {
-    return;
+    return p;
   }
 }
 
 
 Node* Nonterminal :: fn_A() {  //done
   //<A> -> <M> + <A> | <M>
-  if (VERBOSE) cout << "call fn_A()" << endl; 
-  nonterminal.fn_M();
+  if (VERBOSE) cout << "call fn_A()" << endl;
+
+	Node* p = addNode("A"); 
+  p->n0 = nonterminal.fn_M();
   if (mytoken.id == OPERATOR_TK && mytoken.instance == "+") {
-    mytoken = nextToken();
-    nonterminal.fn_A();
-    return;
+    p->token = mytoken;
+		mytoken = nextToken();
+    p->n1 = nonterminal.fn_A();
+    return p;
   }
   else {
-    return;
+    return p;
   }
 }
 
 
 Node* Nonterminal :: fn_M() {  //done
   //<M> -> * <M> | <R>
-  if (VERBOSE) cout << "call fn_M()" << endl; 
+  if (VERBOSE) cout << "call fn_M()" << endl;
+
+	Node* p = addNode("M"); 
   if (mytoken.id == OPERATOR_TK && mytoken.instance == "*") {
-    mytoken = nextToken();
-    nonterminal.fn_M();
-    return;
+    p->token = mytoken;
+		mytoken = nextToken();
+    p->n0 = nonterminal.fn_M();
+    return p;
   }
   else {
-    nonterminal.fn_R();
-    return;
+    p->n0 = nonterminal.fn_R();
+    return p;
   }
 }
 
 
 Node* Nonterminal :: fn_R() {  //done
   //<R> -> ( <expr> ) | Identifier | Integer
-  if (VERBOSE) cout << "call fn_R()" << endl; 
+  if (VERBOSE) cout << "call fn_R()" << endl;
+
+	Node* p = addNode("R"); 
   if (mytoken.id == OPERATOR_TK && mytoken.instance == "(") {
-    mytoken = nextToken();
-    nonterminal.fn_expr();
+    p->token = mytoken;
+		mytoken = nextToken();
+    p->n0 = nonterminal.fn_expr();
     if (mytoken.id == OPERATOR_TK && mytoken.instance == ")") {
-      mytoken = nextToken();
-      return;
+      p->token = mytoken;
+			mytoken = nextToken();
+      return p;
     }
   }
   else if (mytoken.id == IDENTIFIER_TK) {
-    mytoken = nextToken();
-    return;
+    p->token = mytoken;
+		mytoken = nextToken();
+    return p;
   }
   else if (mytoken.id == INTEGER_TK) {
-    mytoken = nextToken();
-    return;
+    p->token = mytoken;
+		mytoken = nextToken();
+    return p;
   }
 }
 
 
 Node* Nonterminal :: fn_RO() {  //done
   //<RO> -> => | =< | == | [ == ] | %
-  if (VERBOSE) cout << "call fn_RO()" << endl; 
+  if (VERBOSE) cout << "call fn_RO()" << endl;
+
+	Node* p = addNode("RO"); 
   if (mytoken.id == OPERATOR_TK && mytoken.instance == "=>") {
-    mytoken = nextToken();
-    return;
+    p->token = mytoken;
+		mytoken = nextToken();
+    return p;
   }
   else if (mytoken.id == OPERATOR_TK && mytoken.instance == "=<") {
-    mytoken = nextToken();
-    return;
+    p->token = mytoken;
+		mytoken = nextToken();
+    return p;
   }
   else if (mytoken.id == OPERATOR_TK && mytoken.instance == "==") {
-    mytoken = nextToken();
-    return;
+    p->token = mytoken;
+		mytoken = nextToken();
+    return p;
   }
   else if (mytoken.id == OPERATOR_TK && mytoken.instance == "[" ) {
-    mytoken = nextToken();
+    p->token = mytoken;
+		mytoken = nextToken();
     if (mytoken.id == OPERATOR_TK && mytoken.instance == "==") {
-      mytoken = nextToken();
+      p->token = mytoken;
+			mytoken = nextToken();
       if (mytoken.id == OPERATOR_TK && mytoken.instance == "]") {
-        mytoken = nextToken();
-        return;
+        p->token = mytoken;
+			  mytoken = nextToken();
+        return p;
       }
       else error("]", mytoken);
     }
     else error("==", mytoken);
   }
   else if (mytoken.id == OPERATOR_TK && mytoken.instance == "%") {
-    mytoken = nextToken();
-    return;
+    p->token = mytoken;
+		mytoken = nextToken();
+    return p;
   }
   else error(TOKENPRINTS[OPERATOR_TK], mytoken);
 }
