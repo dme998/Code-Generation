@@ -86,6 +86,7 @@ int main(int argc, char *argv[]) {
 
   //parse tokens vector
   Node* mytree = parser();
+  cout << endl;
   mytree->print(mytree, 0);
 
   //cout << "Program end." << endl;

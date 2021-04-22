@@ -38,10 +38,10 @@ class Node {
           } 
           line.append(node->label + " ");
           std::cout << line << std::endl;
-          print(node->n0, level + 1); 
-          print(node->n1, level + 1); 
-          print(node->n2, level + 1); 
-          print(node->n3, level + 1); 
+          print(node->n0, level++); 
+          print(node->n1, level++); 
+          print(node->n2, level++); 
+          print(node->n3, level++); 
         }
       }
     }

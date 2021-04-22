@@ -23,7 +23,7 @@ using std::endl;
 static int vindex = 0;  //vindexition in the tokens vector (vector index)
 static token_t mytoken;  //dynamic token
 static Nonterminal nonterminal;  //for access to nonterminal functions
-const bool VERBOSE = true;  //set to true to enable verbose print statements throughout run
+const bool VERBOSE = false;  //set to true to enable verbose print statements throughout run
 
 /**
  * auxillary function that parses tokens according to BNF
