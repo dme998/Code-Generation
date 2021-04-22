@@ -12,6 +12,7 @@
 #ifndef DRIVESCANNER_H
 #define DRIVESCANNER_H
 #include <string>
+#include <vector>
 #include "token.h"
 
 extern std::vector<token_t> gtokens_v;

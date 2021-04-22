@@ -12,11 +12,13 @@
 #ifndef PARSER_H
 #define PARSER_H
 #include "ptree.h"
+#include <string>
+#include <vector>
 
 extern std::vector<token_t> gtokens_v;
 Node* parser();
 token_t nextToken();
-void error(string exp, token_t tk);
+void error(std::string exp, token_t tk);
 Node* addNode(std::string label);
 
 class Nonterminal {

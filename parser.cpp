@@ -14,6 +14,11 @@
 #include "driveScanner.h"
 #include "parser.h"
 #include "ptree.h"
+#include <string>
+#include <vector>
+
+using std::cout;
+using std::endl;
 
 static int vindex = 0;  //vindexition in the tokens vector (vector index)
 static token_t mytoken;  //dynamic token
@@ -60,7 +65,7 @@ token_t nextToken() {
  * @param exp value expected by parser
  * @param tk token most recently received by parser
  */
-void error(string exp, token_t tk) {
+void error(std::string exp, token_t tk) {
   cout << "Error on line " << tk.line << ": " << "expected " << exp << " but received " 
     << TOKENPRINTS[tk.id] << " " << tk.instance << "\nParse failed." << endl;
   exit(1);
@@ -103,6 +108,8 @@ Node* Nonterminal :: fn_program() { //done
   else {
     error("main", mytoken);
   }
+
+  return NULL;
 }
 
 
@@ -125,6 +132,8 @@ Node* Nonterminal :: fn_block() {  //done
     return p;
   }
   else error("begin", mytoken);
+
+  return NULL;
 }
 
 
@@ -165,6 +174,7 @@ Node* Nonterminal :: fn_vars() {  //done
     else error(TOKENPRINTS[IDENTIFIER_TK], mytoken);
   }
 
+  return NULL;
 }
 
 
@@ -192,9 +202,11 @@ Node* Nonterminal :: fn_mStat() {  //done
     p->n0 = nonterminal.fn_stat();
     p->n1 = nonterminal.fn_mStat();
   }
+  
+  return NULL;
 } 
 
-//TODO HERE ONWARD
+
 Node* Nonterminal :: fn_stat() {  //done
   //<stat> -> <in> ; | <out> ; | <block> | <if> ; | <loop> ; | <assign> ; | <goto> ; | <label> ;
   if (VERBOSE) cout << "call fn_stat()" << endl;
@@ -268,6 +280,8 @@ KEYWORD_TK && mytoken.instance == "proc" ) {  //First(goto)
     }
     else error(";", mytoken);
   }
+
+  return NULL;
 } 
 
 
@@ -287,6 +301,8 @@ Node* Nonterminal :: fn_in() {  //done
     else error(TOKENPRINTS[IDENTIFIER_TK], mytoken);
   }
   else error("getter", mytoken);
+
+  return NULL;
 }
 
 
@@ -302,6 +318,8 @@ Node* Nonterminal :: fn_out() {  //done
     return p;
   }
   else error("outter", mytoken);
+
+  return NULL;
 }
 
 
@@ -335,6 +353,8 @@ Node* Nonterminal :: fn_if() {  //done
     else error("[", mytoken);
   }
   else error("if", mytoken);
+
+  return NULL;
 }
 
 
@@ -363,6 +383,8 @@ Node* Nonterminal :: fn_loop() {  //done
     else error("[", mytoken);
   }
   else error("loop", mytoken);
+
+  return NULL;
 }
 
 
@@ -388,6 +410,8 @@ Node* Nonterminal :: fn_assign() {  //done
     else error(TOKENPRINTS[IDENTIFIER_TK], mytoken);
   }
   else error("assign", mytoken);
+
+  return NULL;
 }
 
 
@@ -407,6 +431,8 @@ Node* Nonterminal :: fn_goto() {  //done
     else error(TOKENPRINTS[IDENTIFIER_TK], mytoken);
   }
   else error("proc", mytoken);
+
+  return NULL;
 }
 
 
@@ -426,6 +452,8 @@ Node* Nonterminal :: fn_label() {  //done
     else error(TOKENPRINTS[IDENTIFIER_TK], mytoken);
   }
   else error("void", mytoken);
+
+  return NULL;
 }
 
 
@@ -443,6 +471,8 @@ Node* Nonterminal :: fn_expr() {  //done
   else {
     return p;
   }
+
+  return NULL;
 }
 
 
@@ -465,6 +495,8 @@ Node* Nonterminal :: fn_N() {  //done
   else {
     return p;
   }
+
+  return NULL;
 }
 
 
@@ -483,6 +515,8 @@ Node* Nonterminal :: fn_A() {  //done
   else {
     return p;
   }
+
+  return NULL;
 }
 
 
@@ -501,6 +535,8 @@ Node* Nonterminal :: fn_M() {  //done
     p->n0 = nonterminal.fn_R();
     return p;
   }
+
+  return NULL;
 }
 
 
@@ -529,6 +565,8 @@ Node* Nonterminal :: fn_R() {  //done
 		mytoken = nextToken();
     return p;
   }
+
+  return NULL;
 }
 
 
@@ -573,4 +611,6 @@ Node* Nonterminal :: fn_RO() {  //done
     return p;
   }
   else error(TOKENPRINTS[OPERATOR_TK], mytoken);
+
+  return NULL;
 }

@@ -12,12 +12,9 @@
 #ifndef PTREE_H
 #define PTREE_H
 #include <iostream>
-#include <string>
 
-using std::cout;
-using std::endl;
-
-struct Node {
+class Node {
+    public:
     token_t token;
     std::string label; //string literal of the nonterminal function (e.g. "block", "mStat")
     int level;  //how deep the node is in the tree

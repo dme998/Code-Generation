@@ -14,14 +14,15 @@
 #include <string>
 #include <unistd.h>  //for STDOUT_FILENO
 #include <fstream>
-//#include <stdio.h>  //fopen
 
 #include "token.h"
 #include "scanner.h"
 #include "driveScanner.h"
 #include "parser.h"
 
-using namespace std;
+using std::cout;
+using std::endl;
+using std::ofstream;
 
 string implicitFileExtension(string filename);
 bool fileExists(string filename);
