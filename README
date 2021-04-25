@@ -1,5 +1,5 @@
-Project:        Parser and Tree Builder (P2)
-Description:    Parses token triplets after lexical analysis
+Project:        Static Semantics (P3)
+Description:    Validates proper definition and use of variables after parsing
 Author:         Daniel Eggers <dme998@mail.umsl.edu>
 Course:         Program Translation (CS4280-001)
 Instructor:     Mark Hauschild
@@ -11,7 +11,7 @@ Produces:       tmp.fs (overwrites)
 
 
 Invocation:
-  frontEnd [file]
+  statSem [file]
     file must have .fs extension
   frontEnd [no args]
     Prompts the user to enter stdin line-by-line to later be processed. Enter "stop" when done.
