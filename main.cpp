@@ -89,6 +89,9 @@ int main(int argc, char *argv[]) {
   cout << endl;
   mytree->print(mytree, 0);
 
+  //semantics analysis
+  semantics(mytree);
+
   //cout << "Program end." << endl;
   return 0;
 }
