@@ -2,7 +2,7 @@
 CC= g++
 RM= rm -vf
 CPPFLAGS= -g -Wall -std=c++11 -I.
-PROGRAM= frontEnd
+PROGRAM= statSem
 OBJFILES= main.o parser.o scanner.o driveScanner.o 
 
 $(PROGRAM): $(OBJFILES)
