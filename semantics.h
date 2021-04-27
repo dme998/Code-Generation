@@ -9,9 +9,9 @@
                    scanner.cpp scanner.h ptree.h token.h semantics.cpp semantics.h
  */
 
-#ifndef SCANNER_H
-#define SCANNER_H
+#ifndef SEMANTICS_H
+#define SEMANTICS_H
 
- void semantics(Node* mytree);
+ void semantics();
 
  #endif

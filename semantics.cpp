@@ -9,15 +9,17 @@
                    scanner.cpp scanner.h ptree.h token.h semantics.cpp semantics.h
  */
 
-#include "semantics.h"
 #include <vector>
+#include "semantics.h"
+#include "token.h"
+#include "ptree.h"
+
+using std::vector;
 
 /* performs static semantics analysis
  * @param mytree the root node to the previously generated parse tree
  */
- void semantics(Node* mytree) {
+ void semantics() {
      vector<token_t> identifiers_v;  //symbol table that holds variable identifiers 
      
-     
-     return;
  }

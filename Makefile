@@ -3,7 +3,7 @@ CC= g++
 RM= rm -vf
 CPPFLAGS= -g -Wall -std=c++11 -I.
 PROGRAM= statSem
-OBJFILES= main.o parser.o scanner.o driveScanner.o 
+OBJFILES= main.o parser.o scanner.o driveScanner.o semantics.o
 
 $(PROGRAM): $(OBJFILES)
 	$(CC) -o $(PROGRAM) $(OBJFILES)
@@ -19,6 +19,9 @@ scanner.o: scanner.cpp scanner.h
 
 driveScanner.o: driveScanner.cpp driveScanner.h
 	$(CC) $(CPPFLAGS) -c driveScanner.cpp
+
+semantics.o: semantics.cpp semantics.h
+	$(CC) $(CPPFLAGS) -c semantics.cpp
 
 clean:
 	$(RM) $(PROGRAM) $(OBJFILES)

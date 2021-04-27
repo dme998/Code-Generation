@@ -19,6 +19,7 @@
 #include "scanner.h"
 #include "driveScanner.h"
 #include "parser.h"
+#include "semantics.h"
 
 using std::cout;
 using std::endl;
@@ -85,12 +86,13 @@ int main(int argc, char *argv[]) {
   }
 
   //parse tokens vector
-  Node* mytree = parser();
+  Node* mytree = addNode("tree");
+  mytree = parser();
   cout << endl;
   mytree->print(mytree, 0);
 
   //semantics analysis
-  semantics(mytree);
+  semantics();
 
   //cout << "Program end." << endl;
   return 0;
