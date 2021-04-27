@@ -13,7 +13,17 @@
 #define SEMANTICS_H
 #include "ptree.h"
 #include "token.h"
+#include <vector>
+
+extern std::vector<token_t> gtokens_v;
+
+struct STV_t {
+  token_t token;
+  bool isInit;  // true if identifier follows "data" keyword token
+};
 
 void semantics(Node* mytree);
+void sweepST(std::vector<STV_t> &dynamic_v);
+bool hasDuplicates(std::vector<STV_t> vec);
 
 #endif
