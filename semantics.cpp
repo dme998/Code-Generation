@@ -19,7 +19,7 @@ using std::vector;
 /* performs static semantics analysis
  * @param mytree the root node to the previously generated parse tree
  */
- void semantics() {
+ void semantics(Node* mytree) {
      vector<token_t> identifiers_v;  //symbol table that holds variable identifiers 
      
  }

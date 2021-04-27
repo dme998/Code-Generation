@@ -11,7 +11,9 @@
 
 #ifndef SEMANTICS_H
 #define SEMANTICS_H
+#include "ptree.h"
+#include "token.h"
 
- void semantics();
+void semantics(Node* mytree);
 
- #endif
+#endif

@@ -12,6 +12,8 @@
 #ifndef PTREE_H
 #define PTREE_H
 #include <iostream>
+#include <string>
+#include "token.h"
 
 class Node {
     public:

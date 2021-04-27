@@ -92,7 +92,7 @@ int main(int argc, char *argv[]) {
   mytree->print(mytree, 0);
 
   //semantics analysis
-  semantics();
+  semantics(mytree);
 
   //cout << "Program end." << endl;
   return 0;
