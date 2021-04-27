@@ -36,7 +36,7 @@ Node* parser() {
   mytoken = nextToken();
   root = nonterminal.fn_program();
   if (mytoken.id == EOF_TK) {
-    printf("EOF token received.\nParse OK.\n");
+    printf("EOF token received. Parse OK.\n");
     return root;
   }
   else {

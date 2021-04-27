@@ -89,7 +89,8 @@ int main(int argc, char *argv[]) {
   Node* mytree = addNode("tree");
   mytree = parser();
   cout << endl;
-  mytree->print(mytree, 0);
+  
+  if (VERBOSE) mytree->print(mytree, 0);
 
   //semantics analysis
   semantics(mytree);
