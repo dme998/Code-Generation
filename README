@@ -18,15 +18,13 @@ Invocation:
     The user input is written to temporary file "tmp.fs" and processed immediately after write.
 
 Additional Option:
-  A global variable "const bool VERBOSE" is at the top of driveScanner.cpp, parser.cpp, and main.cpp.
+  A global variable "const bool VERBOSE" is at the top of some source files.
   If set to TRUE, verbose statements are printed as the program runs its course.
-  By default, parser.cpp is set to TRUE.
-
 
 Overview of functionality:
   This program lexically analyzes a file (tokens separated by whitespace) and loads tokens into vector.
   The vector is then processed by the parser to determine if syntax matches grammar (see below).
-
+  The semantics analyzer checks proper declaration and use of variables (global scope only).
 
 Details of functionality:
   1. main() processes cmdl arguments.
@@ -42,6 +40,10 @@ Details of functionality:
      Parsing is done according to BNF grammar defined below.
   7. If VERBOSE flag is set in parser.cpp, tokens will be printed during recursive descent.
   8. The finished parse tree is passed back to main() and then printed in preorder traversal. 
+  9. The parse tree is passed to semantics().
+  10. The semantics analyzer sweeps identifiers into a symbol table vector and tags the ones that are declarations.
+  11. The symbol table vector is checked for duplicate variable declarations.
+  12. The symbol table vector is checked for undeclared variables.
 
 
 
