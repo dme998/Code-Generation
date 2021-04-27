@@ -23,7 +23,7 @@ using std::endl;
 static int vindex = 0;  //vindexition in the tokens vector (vector index)
 static token_t mytoken;  //dynamic token
 static Nonterminal nonterminal;  //for access to nonterminal functions
-const bool VERBOSE = true;  //set to true to enable verbose print statements throughout run
+const bool VERBOSE = false;  //set to true to enable verbose print statements throughout run
 
 /**
  * auxillary function that parses tokens according to BNF
@@ -198,10 +198,10 @@ Node* Nonterminal :: fn_mStat() {  //done
     //do not consume tokens for follow sets
     return NULL;
   }
-  else if (mytoken.instance == "in" || mytoken.instance == "out" 
-    || mytoken.instance == "block" || mytoken.instance == "if" 
+  else if (mytoken.instance == "getter" || mytoken.instance == "outter" 
+    || mytoken.instance == "begin" || mytoken.instance == "if" 
     || mytoken.instance == "loop" || mytoken.instance == "assign" 
-    || mytoken.instance == "goto" || mytoken.instance == "label") {  
+    || mytoken.instance == "proc" || mytoken.instance == "void") {  
     p->n0 = nonterminal.fn_stat();
     p->n1 = nonterminal.fn_mStat();
     return p;
