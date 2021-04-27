@@ -89,7 +89,7 @@ int main(int argc, char *argv[]) {
   Node* mytree = addNode("tree");
   mytree = parser();
   
-  if (VERBOSE) mytree->print(mytree, 0);
+  mytree->print(mytree, 0);
 
   //semantics analysis
   semantics(mytree);
