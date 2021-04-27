@@ -88,14 +88,12 @@ int main(int argc, char *argv[]) {
   //parse tokens vector
   Node* mytree = addNode("tree");
   mytree = parser();
-  cout << endl;
   
   if (VERBOSE) mytree->print(mytree, 0);
 
   //semantics analysis
   semantics(mytree);
 
-  //cout << "Program end." << endl;
   return 0;
 }
 

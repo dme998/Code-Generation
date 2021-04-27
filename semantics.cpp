@@ -18,7 +18,7 @@ using std::cout;
 using std::endl;
 using std::vector;
 
-const bool VERBOSE = true; // debug print messages
+const bool VERBOSE = false; // debug print messages
 
 /* performs static semantics analysis
  * @param mytree the root node to the previously generated parse tree
@@ -94,7 +94,6 @@ bool hasDuplicates(const vector<STV_t> vec) {
  * @return true if one is found 
  */
 bool hasUndeclaredVar(const vector<STV_t> vec) {
-  cout << "\nFN:\n";
   bool dnf = true; // did not find matching declaration
   token_t itk;
   token_t jtk;
@@ -106,9 +105,7 @@ bool hasUndeclaredVar(const vector<STV_t> vec) {
       // can we find a matching declaration?
       for(size_t j=0; j<i; j++) { 
         jtk = vec[j].token;
-        cout << "Iteration: ("<<i<<","<<j<<")" << endl;
         if (itk.instance == jtk.instance && vec[j].isData) {
-          cout << "Match found." << endl;
           dnf = false;
           break;
         }
