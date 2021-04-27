@@ -28,7 +28,7 @@ void semantics(Node* mytree) {
   vector<STV_t> identifiers_v;  //symbol table that holds variable identifiers 
   sweepST(identifiers_v);
 
-  if ( (hasDuplicates(identifiers_v) || (hasUndeclaredVar(identifiers_v)) ) {
+  if ( hasDuplicates(identifiers_v) || (hasUndeclaredVar(identifiers_v)) ) {
     exit(1);
   }
   else {
