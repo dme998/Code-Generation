@@ -20,6 +20,7 @@
 #include "driveScanner.h"
 #include "parser.h"
 #include "semantics.h"
+#include "compile.h"
 
 using std::cout;
 using std::endl;
@@ -93,6 +94,9 @@ int main(int argc, char *argv[]) {
 
   //semantics analysis
   semantics(mytree);
+
+  //code generation
+  compile(mytree);
 
   return 0;
 }

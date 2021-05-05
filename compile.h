@@ -15,7 +15,6 @@
 #include "ptree.h"
 #include "token.h"
 
-
-
+void compile(Node* mytree);
 
 #endif

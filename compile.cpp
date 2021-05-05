@@ -9,3 +9,17 @@
                    scanner.cpp scanner.h ptree.h token.h semantics.cpp semantics.h
                    compile.cpp compile.h
  */
+#include <iostream>
+#include "compile.h"
+#include "ptree.h"
+#include "token.h"
+
+using std::cout;
+using std::endl;
+
+const bool VERBOSE = true;
+
+void compile(Node* mytree) {
+  if (VERBOSE) cout << "Code generation start." << endl;
+
+}
