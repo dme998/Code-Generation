@@ -1,23 +1,24 @@
-Project:        Static Semantics (P3)
-Description:    Validates proper definition and use of variables after parsing
+Project:        Code Generation (P4)
+Description:    Generates code after lexical analysis, parsing, and semantics analysis
 Author:         Daniel Eggers <dme998@mail.umsl.edu>
 Course:         Program Translation (CS4280-001)
 Instructor:     Mark Hauschild
-Date:           April 26, 2021 
+Date:           April May 8, 2021 
 Test System:    CentOS Linux 7 (Core)
 Files:          main.cpp parser.cpp parser.h driveScanner.cpp driveScanner.h 
-                scanner.cpp scanner.h ptree.h token.h semantics.cpp semantics.h
+                scanner.cpp scanner.h ptree.h token.h semantics.cpp semantics.h 
+                compiler.cpp compiler.h
 Produces:       tmp.fs (overwrites)
 
 
 Invocation:
-  statSem [file]
+  compfs [file]
     file must have .fs extension
-  frontEnd [no args]
+  compfs [no args]
     Prompts the user to enter stdin line-by-line to later be processed. Enter "stop" when done.
     The user input is written to temporary file "tmp.fs" and processed immediately after write.
 
-Additional Option:
+Verbose Option:
   A global variable "const bool VERBOSE" is at the top of some source files.
   If set to TRUE, verbose statements are printed as the program runs its course.
 
@@ -25,6 +26,7 @@ Overview of functionality:
   This program lexically analyzes a file (tokens separated by whitespace) and loads tokens into vector.
   The vector is then processed by the parser to determine if syntax matches grammar (see below).
   The semantics analyzer checks proper declaration and use of variables (global scope only).
+  Storage is allocated and code is generated.
 
 Details of functionality:
   1. main() processes cmdl arguments.
@@ -44,30 +46,28 @@ Details of functionality:
   10. The semantics analyzer sweeps identifiers into a symbol table vector and tags the ones that are declarations.
   11. The symbol table vector is checked for duplicate variable declarations.
   12. The symbol table vector is checked for undeclared variables.
+  13. Storage is allocated for global variables and a target file is generated. 
 
 
 
 BNF Grammar used:
-Uses only tokens detected in P1, no exceptions. 
-Some legal tokens will pass the scanner but will always lead to an error here as they are not part of this BNF
-
-<program> -> <vars> main <block>
-<block>   -> begin <vars> <stats> end
-<vars>    -> empty | data Identifier :=  Integer  ;  <vars> 
-<expr>    -> <N> - <expr>  | <N>
-<N>       -> <A> / <N> | <A> * <N> | <A>
-<A>       -> <M> + <A> | <M>
-<M>       -> * <M> |  <R>
-<R>       -> ( <expr> ) | Identifier | Integer
-<stats>   -> <stat>  <mStat>
-<mStat>   -> empty |  <stat>  <mStat>
-<stat>    -> <in> ;  | <out> ;  | <block> | <if> ;  | <loop> ;  | <assign> ; | <goto> ; | <label> ;
-<in>      -> getter  Identifier  
-<out>     -> outter <expr>
-<if>      -> if [ <expr> <RO> <expr> ] then <stat>
-<loop>    -> loop  [ <expr> <RO> <expr> ]  <stat>
-<assign>  -> assign Identifier  := <expr>  
-<RO>      -> =>  | =< |  ==  |   [ == ]  (three tokens)  | %
-<label>   -> void Identifier
-<goto>    -> proc Identifier
+  <program> -> <vars> main <block>
+  <block>   -> begin <vars> <stats> end
+  <vars>    -> empty | data Identifier :=  Integer  ;  <vars> 
+  <expr>    -> <N> - <expr>  | <N>
+  <N>       -> <A> / <N> | <A> * <N> | <A>
+  <A>       -> <M> + <A> | <M>
+  <M>       -> * <M> |  <R>
+  <R>       -> ( <expr> ) | Identifier | Integer
+  <stats>   -> <stat>  <mStat>
+  <mStat>   -> empty |  <stat>  <mStat>
+  <stat>    -> <in> ;  | <out> ;  | <block> | <if> ;  | <loop> ;  | <assign> ; | <goto> ; | <label> ;
+  <in>      -> getter  Identifier  
+  <out>     -> outter <expr>
+  <if>      -> if [ <expr> <RO> <expr> ] then <stat>
+  <loop>    -> loop  [ <expr> <RO> <expr> ]  <stat>
+  <assign>  -> assign Identifier  := <expr>  
+  <RO>      -> =>  | =< |  ==  |   [ == ]  (three tokens)  | %
+  <label>   -> void Identifier
+  <goto>    -> proc Identifier
 
