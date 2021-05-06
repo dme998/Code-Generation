@@ -13,14 +13,17 @@
 #define PTREE_H
 #include <iostream>
 #include <string>
+#include <vector>
 #include "token.h"
+using std::cout;
+using std::endl;
 
 class Node {
     public:
-    token_t token;
+    std::vector<token_t> leaves_v;
     std::string label; //string literal of the nonterminal function (e.g. "block", "mStat")
     int level;  //how deep the node is in the tree
-    
+     
     //child nodes
     Node* n0;
     Node* n1;
@@ -29,25 +32,25 @@ class Node {
     
     //recursive function to traverse and print tree in preorder
     void print(Node* node, int level) {
-      string line;
-      for(int i = 0; i < 1; i++) {
-        if (node == NULL) {
-          return;
-        }
-        else {
-          for(int counter = 0; counter < level; counter++) {
-            line.append("  ");
-          } 
-          line.append(node->label + " ");
-          std::cout << line << std::endl;
-          print(node->n0, level++); 
-          print(node->n1, level++); 
-          print(node->n2, level++); 
-          print(node->n3, level++); 
+      level++;
+      if (node == NULL) {  return; }
+      if (node->label != "program") {
+        cout << endl; 
+        for(int l = 0; l < level; l++) { 
+          cout << "\t";
         }
       }
+      cout << "<" << node->label << "> ";
+
+      int sz = node->leaves_v.size();
+      for(int i = 0; i < sz; i++) {
+        cout << node->leaves_v.at(i).instance << " ";
+      }
+      print(node->n0, level);
+      print(node->n1, level);
+      print(node->n2, level);
+      print(node->n3, level);
     }
-    
 };
 
 

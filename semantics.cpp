@@ -18,13 +18,13 @@ using std::cout;
 using std::endl;
 using std::vector;
 
-const bool VERBOSE = false; // debug print messages
+const bool VERBOSE = true; // debug print messages
 
 /* performs static semantics analysis
  * @param mytree the root node to the previously generated parse tree
  */
 void semantics(Node* mytree) {
-  if (VERBOSE) cout << "Semantics analysis." << endl;
+  if (VERBOSE) cout << "\nSemantics analysis." << endl;
   vector<STV_t> identifiers_v;  //symbol table that holds variable identifiers 
   sweepST(identifiers_v);
 

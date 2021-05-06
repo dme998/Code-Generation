@@ -101,7 +101,7 @@ Node* Nonterminal :: fn_program() { //done
   Node* p = addNode("program");
   p->n0 = nonterminal.fn_vars();
   if (mytoken.id == KEYWORD_TK && mytoken.instance == "main") {
-    p->token = mytoken;
+    p->leaves_v.push_back(mytoken);
     mytoken = nextToken();
     p->n1 = nonterminal.fn_block();
     return p;
@@ -120,12 +120,12 @@ Node* Nonterminal :: fn_block() {  //done
 
   Node* p = addNode("block");
   if (mytoken.id == KEYWORD_TK && mytoken.instance == "begin") {
-    p->token = mytoken;
+    p->leaves_v.push_back(mytoken);
     mytoken = nextToken();
     p->n0 = nonterminal.fn_vars();
     p->n1 = nonterminal.fn_stats();
     if (mytoken.id == KEYWORD_TK && mytoken.instance == "end") {
-      p->token = mytoken;
+      p->leaves_v.push_back(mytoken);
       mytoken = nextToken();
       return p;
     }
@@ -149,19 +149,19 @@ Node* Nonterminal :: fn_vars() {  //done
 
   Node* p = addNode("vars");
   if (mytoken.instance == "data") {
-    p->token = mytoken;
+    p->leaves_v.push_back(mytoken);
     mytoken = nextToken();
     if (mytoken.id == IDENTIFIER_TK) {
-      p->token = mytoken;
+      p->leaves_v.push_back(mytoken);
       mytoken = nextToken();
       if (mytoken.id == OPERATOR_TK && mytoken.instance == ":=") {
-        p->token = mytoken;
+        p->leaves_v.push_back(mytoken);
         mytoken = nextToken();
         if (mytoken.id == INTEGER_TK) {
-          p->token = mytoken;
+          p->leaves_v.push_back(mytoken);
           mytoken = nextToken();
           if (mytoken.id == OPERATOR_TK && mytoken.instance == ";") {
-            p->token = mytoken;
+            p->leaves_v.push_back(mytoken);
             mytoken = nextToken();
             p->n0 = nonterminal.fn_vars();
             return p;
@@ -220,7 +220,7 @@ Node* Nonterminal :: fn_stat() {  //done
   if (mytoken.id == KEYWORD_TK && mytoken.instance == "getter") { //First(in)
     p->n0 = nonterminal.fn_in();
     if (mytoken.id == OPERATOR_TK && mytoken.instance == ";") {
-      p->token = mytoken;
+      p->leaves_v.push_back(mytoken);
 			mytoken = nextToken();
       return p;
     }
@@ -229,7 +229,7 @@ Node* Nonterminal :: fn_stat() {  //done
   else if (mytoken.id == KEYWORD_TK && mytoken.instance == "outter") { //First(out)
     p->n0 = nonterminal.fn_out(); 
     if (mytoken.id == OPERATOR_TK && mytoken.instance == ";") {
-      p->token = mytoken;
+      p->leaves_v.push_back(mytoken);
 			mytoken = nextToken();
       return p;
     }
@@ -242,7 +242,7 @@ Node* Nonterminal :: fn_stat() {  //done
   else if (mytoken.id == KEYWORD_TK && mytoken.instance == "if" ) {  //First(if)
     p->n0 = nonterminal.fn_if();
     if (mytoken.id == OPERATOR_TK && mytoken.instance == ";") {
-      p->token = mytoken;
+      p->leaves_v.push_back(mytoken);
 			mytoken = nextToken();
       return p;
     }
@@ -251,7 +251,7 @@ Node* Nonterminal :: fn_stat() {  //done
   else if (mytoken.id == KEYWORD_TK && mytoken.instance == "loop" ) {  //First(loop)
     p->n0 = nonterminal.fn_loop(); 
     if (mytoken.id == OPERATOR_TK && mytoken.instance == ";") {
-      p->token = mytoken;
+      p->leaves_v.push_back(mytoken);
 			mytoken = nextToken();
       return p;
     }
@@ -260,7 +260,7 @@ Node* Nonterminal :: fn_stat() {  //done
   else if (mytoken.id == KEYWORD_TK && mytoken.instance == "assign" ) {  //First(assign)
     p->n0 = nonterminal.fn_assign();
     if (mytoken.id == OPERATOR_TK && mytoken.instance == ";") {
-      p->token = mytoken;
+      p->leaves_v.push_back(mytoken);
 			mytoken = nextToken();
       return p;
     }
@@ -270,7 +270,7 @@ Node* Nonterminal :: fn_stat() {  //done
 KEYWORD_TK && mytoken.instance == "proc" ) {  //First(goto)
     p->n0 = nonterminal.fn_goto();
     if (mytoken.id == OPERATOR_TK && mytoken.instance == ";") {
-      p->token = mytoken;
+      p->leaves_v.push_back(mytoken);
 			mytoken = nextToken();
       return p;
     }
@@ -279,7 +279,7 @@ KEYWORD_TK && mytoken.instance == "proc" ) {  //First(goto)
   else if (mytoken.id == KEYWORD_TK && mytoken.instance == "void" ) {  //First(label)
     p->n0 = nonterminal.fn_label();
     if (mytoken.id == OPERATOR_TK && mytoken.instance == ";") {
-      p->token = mytoken;
+      p->leaves_v.push_back(mytoken);
 			mytoken = nextToken();
       return p;
     }
@@ -296,10 +296,10 @@ Node* Nonterminal :: fn_in() {  //done
 
 	Node* p = addNode("in");
   if (mytoken.id == KEYWORD_TK && mytoken.instance == "getter") {
-    p->token = mytoken;
+    p->leaves_v.push_back(mytoken);
 		mytoken = nextToken();
     if (mytoken.id == IDENTIFIER_TK) {    
-      p->token = mytoken;
+      p->leaves_v.push_back(mytoken);
 			mytoken = nextToken();
       return p;
     }
@@ -317,7 +317,7 @@ Node* Nonterminal :: fn_out() {  //done
 
 	Node* p = addNode("out");
   if (mytoken.id == KEYWORD_TK && mytoken.instance == "outter") {
-    p->token = mytoken;
+    p->leaves_v.push_back(mytoken);
 		mytoken = nextToken();
     p->n0 = nonterminal.fn_expr();
     return p;
@@ -334,19 +334,19 @@ Node* Nonterminal :: fn_if() {  //done
 
 	Node* p = addNode("if");
   if (mytoken.id == KEYWORD_TK && mytoken.instance == "if") {
-    p->token = mytoken;
+    p->leaves_v.push_back(mytoken);
 		mytoken = nextToken();
     if (mytoken.id == OPERATOR_TK  && mytoken.instance == "[") {
-      p->token = mytoken;
+      p->leaves_v.push_back(mytoken);
 			mytoken = nextToken();
       p->n0 = nonterminal.fn_expr();
       p->n1 = nonterminal.fn_RO();
       p->n2 = nonterminal.fn_expr();
       if (mytoken.id == OPERATOR_TK && mytoken.instance == "]") {
-        p->token = mytoken;
+        p->leaves_v.push_back(mytoken);
 			  mytoken = nextToken();
         if (mytoken.id == KEYWORD_TK && mytoken.instance == "then") {
-          p->token = mytoken;
+          p->leaves_v.push_back(mytoken);
 			    mytoken = nextToken();
           p->n3 = nonterminal.fn_stat();
           return p;
@@ -369,16 +369,16 @@ Node* Nonterminal :: fn_loop() {  //done
 
 	Node* p = addNode("loop"); 
   if (mytoken.id == KEYWORD_TK && mytoken.instance == "loop") {
-    p->token = mytoken;
+    p->leaves_v.push_back(mytoken);
 		mytoken = nextToken();
     if (mytoken.id == OPERATOR_TK && mytoken.instance == "[") {
-      p->token = mytoken;
+      p->leaves_v.push_back(mytoken);
 			mytoken = nextToken();
       p->n0 = nonterminal.fn_expr();
       p->n1 = nonterminal.fn_RO();
       p->n2 = nonterminal.fn_expr();
       if (mytoken.id == OPERATOR_TK && mytoken.instance == "]") {
-        p->token = mytoken;
+        p->leaves_v.push_back(mytoken);
 			  mytoken = nextToken();
         p->n3 = nonterminal.fn_stat();
         return p;
@@ -399,13 +399,13 @@ Node* Nonterminal :: fn_assign() {  //done
 
 	Node* p = addNode("assign"); 
   if (mytoken.id == KEYWORD_TK && mytoken.instance == "assign") {
-    p->token = mytoken;
+    p->leaves_v.push_back(mytoken);
 		mytoken = nextToken();
     if (mytoken.id == IDENTIFIER_TK) {
-      p->token = mytoken;
+      p->leaves_v.push_back(mytoken);
 			mytoken = nextToken();
       if (mytoken.id == OPERATOR_TK && mytoken.instance == ":=") {
-        p->token = mytoken;
+        p->leaves_v.push_back(mytoken);
 			  mytoken = nextToken();
         p->n0 = nonterminal.fn_expr();
         return p;
@@ -426,10 +426,10 @@ Node* Nonterminal :: fn_goto() {  //done
 
 	Node* p = addNode("goto"); 
   if (mytoken.id == KEYWORD_TK && mytoken.instance == "proc") {
-    p->token = mytoken;
+    p->leaves_v.push_back(mytoken);
 		mytoken = nextToken();
     if (mytoken.id == IDENTIFIER_TK) {
-      p->token = mytoken;
+      p->leaves_v.push_back(mytoken);
 			mytoken = nextToken();
       return p;
     }
@@ -447,10 +447,10 @@ Node* Nonterminal :: fn_label() {  //done
 
 	Node* p = addNode("label"); 
   if (mytoken.id == KEYWORD_TK && mytoken.instance == "void") {
-    p->token = mytoken;
+    p->leaves_v.push_back(mytoken);
 		mytoken = nextToken();
     if (mytoken.id == IDENTIFIER_TK) {
-      p->token = mytoken;
+      p->leaves_v.push_back(mytoken);
 			mytoken = nextToken();
       return p;
     }
@@ -469,7 +469,7 @@ Node* Nonterminal :: fn_expr() {  //done
 	Node* p = addNode("expr"); 
   p->n0 = nonterminal.fn_N();
   if (mytoken.id == OPERATOR_TK && mytoken.instance == "-") {
-    p->token = mytoken;
+    p->leaves_v.push_back(mytoken);
 		mytoken = nextToken();
     p->n1 = nonterminal.fn_expr();
   }
@@ -488,12 +488,12 @@ Node* Nonterminal :: fn_N() {  //done
 	Node* p = addNode("N"); 
   p->n0 = nonterminal.fn_A();
   if (mytoken.id == OPERATOR_TK && mytoken.instance == "/") {
-    p->token = mytoken;
+    p->leaves_v.push_back(mytoken);
 		mytoken = nextToken();
     p->n1 = nonterminal.fn_N();
   }
   else if (mytoken.id == OPERATOR_TK && mytoken.instance == "*") {
-    p->token = mytoken;
+    p->leaves_v.push_back(mytoken);
 		mytoken = nextToken();
     p->n1 = nonterminal.fn_N();
   }
@@ -512,7 +512,7 @@ Node* Nonterminal :: fn_A() {  //done
 	Node* p = addNode("A"); 
   p->n0 = nonterminal.fn_M();
   if (mytoken.id == OPERATOR_TK && mytoken.instance == "+") {
-    p->token = mytoken;
+    p->leaves_v.push_back(mytoken);
 		mytoken = nextToken();
     p->n1 = nonterminal.fn_A();
     return p;
@@ -531,7 +531,7 @@ Node* Nonterminal :: fn_M() {  //done
 
 	Node* p = addNode("M"); 
   if (mytoken.id == OPERATOR_TK && mytoken.instance == "*") {
-    p->token = mytoken;
+    p->leaves_v.push_back(mytoken);
 		mytoken = nextToken();
     p->n0 = nonterminal.fn_M();
     return p;
@@ -551,22 +551,22 @@ Node* Nonterminal :: fn_R() {  //done
 
 	Node* p = addNode("R"); 
   if (mytoken.id == OPERATOR_TK && mytoken.instance == "(") {
-    p->token = mytoken;
+    p->leaves_v.push_back(mytoken);
 		mytoken = nextToken();
     p->n0 = nonterminal.fn_expr();
     if (mytoken.id == OPERATOR_TK && mytoken.instance == ")") {
-      p->token = mytoken;
+      p->leaves_v.push_back(mytoken);
 			mytoken = nextToken();
       return p;
     }
   }
   else if (mytoken.id == IDENTIFIER_TK) {
-    p->token = mytoken;
+    p->leaves_v.push_back(mytoken);
 		mytoken = nextToken();
     return p;
   }
   else if (mytoken.id == INTEGER_TK) {
-    p->token = mytoken;
+    p->leaves_v.push_back(mytoken);
 		mytoken = nextToken();
     return p;
   }
@@ -581,28 +581,28 @@ Node* Nonterminal :: fn_RO() {  //done
 
 	Node* p = addNode("RO"); 
   if (mytoken.id == OPERATOR_TK && mytoken.instance == "=>") {
-    p->token = mytoken;
+    p->leaves_v.push_back(mytoken);
 		mytoken = nextToken();
     return p;
   }
   else if (mytoken.id == OPERATOR_TK && mytoken.instance == "=<") {
-    p->token = mytoken;
+    p->leaves_v.push_back(mytoken);
 		mytoken = nextToken();
     return p;
   }
   else if (mytoken.id == OPERATOR_TK && mytoken.instance == "==") {
-    p->token = mytoken;
+    p->leaves_v.push_back(mytoken);
 		mytoken = nextToken();
     return p;
   }
   else if (mytoken.id == OPERATOR_TK && mytoken.instance == "[" ) {
-    p->token = mytoken;
+    p->leaves_v.push_back(mytoken);
 		mytoken = nextToken();
     if (mytoken.id == OPERATOR_TK && mytoken.instance == "==") {
-      p->token = mytoken;
+      p->leaves_v.push_back(mytoken);
 			mytoken = nextToken();
       if (mytoken.id == OPERATOR_TK && mytoken.instance == "]") {
-        p->token = mytoken;
+        p->leaves_v.push_back(mytoken);
 			  mytoken = nextToken();
         return p;
       }
@@ -611,7 +611,7 @@ Node* Nonterminal :: fn_RO() {  //done
     else error("==", mytoken);
   }
   else if (mytoken.id == OPERATOR_TK && mytoken.instance == "%") {
-    p->token = mytoken;
+    p->leaves_v.push_back(mytoken);
 		mytoken = nextToken();
     return p;
   }
