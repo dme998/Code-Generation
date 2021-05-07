@@ -96,7 +96,7 @@ int main(int argc, char *argv[]) {
   semantics(mytree);
 
   //code generation
-  compile(mytree);
+  compile(mytree, infile);
 
   return 0;
 }

@@ -15,6 +15,7 @@
 #include "ptree.h"
 #include "token.h"
 
-void compile(Node* mytree);
+void compile(Node* mytree, std::string infile);
+std::string swapFileExtension(std::string filename);
 
 #endif
