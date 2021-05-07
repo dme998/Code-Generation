@@ -1,5 +1,7 @@
+Storage=Global
+
 Project:        Code Generation (P4)
-Description:    Generates code after lexical analysis, parsing, and semantics analysis
+Description:    Generates asm code after lexical analysis, parsing, and semantics analysis
 Author:         Daniel Eggers <dme998@mail.umsl.edu>
 Course:         Program Translation (CS4280-001)
 Instructor:     Mark Hauschild
@@ -8,7 +10,9 @@ Test System:    CentOS Linux 7 (Core)
 Files:          main.cpp parser.cpp parser.h driveScanner.cpp driveScanner.h 
                 scanner.cpp scanner.h ptree.h token.h semantics.cpp semantics.h 
                 compiler.cpp compiler.h
-Produces:       tmp.fs (overwrites)
+Produces:       tmp.fs (overwrites), [file].asm (overwrites)
+
+The assembly code is generated according to specification at <https://comp.umsl.edu/assembler/>.
 
 
 Invocation:
@@ -26,7 +30,7 @@ Overview of functionality:
   This program lexically analyzes a file (tokens separated by whitespace) and loads tokens into vector.
   The vector is then processed by the parser to determine if syntax matches grammar (see below).
   The semantics analyzer checks proper declaration and use of variables (global scope only).
-  Storage is allocated and code is generated.
+  ASM Code is written to target file with the same base filename as the input file.
 
 Details of functionality:
   1. main() processes cmdl arguments.
@@ -46,8 +50,7 @@ Details of functionality:
   10. The semantics analyzer sweeps identifiers into a symbol table vector and tags the ones that are declarations.
   11. The symbol table vector is checked for duplicate variable declarations.
   12. The symbol table vector is checked for undeclared variables.
-  13. Storage is allocated for global variables and a target file is generated. 
-
+  13. Target file is generated. First code translation is written, then storage allocation.
 
 
 BNF Grammar used:
