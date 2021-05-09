@@ -14,8 +14,11 @@
 #define COMPILE_H
 #include "ptree.h"
 #include "token.h"
+#include "semantics.h"
 
 void compile(Node* mytree, std::string infile);
 std::string swapFileExtension(std::string filename);
+void generateCode(Node* node, int level);
+extern std::vector<STV_t> gstv;
 
 #endif

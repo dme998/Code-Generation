@@ -22,7 +22,7 @@ struct STV_t {
   bool isData;  // true if identifier follows "data" keyword token
 };
 
-void semantics(Node* mytree);
+vector<STV_t> semantics(Node* mytree);
 void sweepST(std::vector<STV_t> &dynamic_v);
 bool hasDuplicates(const std::vector<STV_t> vec);
 bool hasUndeclaredVar(const std::vector<STV_t> vec);

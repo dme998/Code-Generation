@@ -29,6 +29,7 @@ using std::ofstream;
 string implicitFileExtension(string filename);
 bool fileExists(string filename);
 vector<token_t> gtokens_v;
+vector<STV_t> gstv; //global symbol table vector
 const bool VERBOSE = false; //set to true to enable verbose print statements throughout run
 
 
@@ -93,7 +94,7 @@ int main(int argc, char *argv[]) {
   mytree->print(mytree, 0);
 
   //semantics analysis
-  semantics(mytree);
+  gstv = semantics(mytree);
 
   //code generation
   compile(mytree, infile);
