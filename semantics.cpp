@@ -18,7 +18,7 @@ using std::cout;
 using std::endl;
 using std::vector;
 
-const bool VERBOSE = true; // debug print messages
+const bool VERBOSE = false; // debug print messages
 
 /* performs static semantics analysis
  * @param mytree the root node to the previously generated parse tree
@@ -32,7 +32,7 @@ vector<STV_t> semantics(Node* mytree) {
     exit(1);
   }
   else {
-    cout << "Semantics OK." << endl;
+    if (VERBOSE) cout << "Semantics OK." << endl;
   }
   return identifiers_v;
 }

@@ -90,8 +90,7 @@ int main(int argc, char *argv[]) {
   //parse tokens vector
   Node* mytree = addNode("tree");
   mytree = parser();
-  
-  mytree->print(mytree, 0);
+  //mytree->print(mytree, 0);
 
   //semantics analysis
   gstv = semantics(mytree);

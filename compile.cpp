@@ -40,10 +40,17 @@ void compile(Node* mytree, std::string infile) {
   ASMFILE.open(targetName);
   generateCode(mytree, 0);
   ASMFILE << "STOP\n";
-  ASMFILE.close();
   
   //Storage Allocation (post-STOP)
     //TODO write global vars: var value (read through vector)
+    cout << "FOR:" << endl;
+    for (int i = 0; i < (int)gstv.size(); i++) {
+      cout << ":" << gstv.at(i).token.instance << endl;
+      if (gstv.at(i).token.id == IDENTIFIER_TK && gstv.at(i).isData)
+        ASMFILE << gstv.at(i).token.instance << " 0\n";
+    }
+    cout << endl;
+    ASMFILE.close();
   
 
   cout << targetName << endl;
@@ -93,9 +100,16 @@ void generateCode(Node* node, int level) {
     // possible leaves: data ID := Int ;
     cout << "vars" << endl;
     for(int i = 0; i < leafsize; i++) {
-      cout << "GEN-CODEs " << node->leaves_v.at(i).instance << "\n";
+      cout << "<vars>leaves: " << node->leaves_v.at(i).instance << "\n";
     }
-
+    if (leafsize >= 4) {  
+      ASMFILE << "ADD " << node->leaves_v.at(3).instance << "\n"
+      << "STORE " << node->leaves_v.at(1).instance << "\n"
+      << "WRITE " << node->leaves_v.at(1).instance << "\n";
+    }
+    else if (leafsize == 0) {
+      ASMFILE << "\n";
+    }
   }
   else if (label == "stats") {
     // possible leaves: none
@@ -113,9 +127,9 @@ void generateCode(Node* node, int level) {
     }
   }
   else if (label == "out") {
-    // possible leaves: outter
+    // possible leaves: outter 
     if (leafsize == 1) {
-      ASMFILE << "WRITE " << node->leaves_v.at(0).instance << "\n";
+      ASMFILE << "WRITE "; 
     }
   }
   else {
