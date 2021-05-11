@@ -1,7 +1,11 @@
 Storage=Global
-Note: the example program given p4g5 doesn't pass the parser.  As far as I can tell, this is correct 
-behavior.  <stat> should produce <loop> ; but the semicolon is absent. 
+!Important Notes: 
+  1) if-statements, loops, and arithmetic operations are not implemented. 
+     A warning is displayed if attempting to compile unsupported code. 
+     If no warning is displayed, the compiled program is intended to work. 
+  2) proc defines the identifier, void does not (i.e. proc must come before void).
 
+--------------------------------------------------------------------------------
 Project:        Code Generation (P4)
 Description:    Generates asm code after lexical analysis, parsing, and semantics analysis
 Author:         Daniel Eggers <dme998@mail.umsl.edu>
@@ -53,6 +57,7 @@ Details of functionality:
   11. The symbol table vector is checked for duplicate variable declarations.
   12. The symbol table vector is checked for undeclared variables.
   13. Target file is generated. First code translation is written, then storage allocation.
+      Translation is done by traversing the parse tree and writing to target file during traversal. 
 
 
 BNF Grammar used:
