@@ -43,9 +43,9 @@ void compile(Node* mytree, std::string infile) {
   
   //Storage Allocation (post-STOP)
     //TODO write global vars: var value (read through vector)
-    cout << "FOR:" << endl;
+    if (VERBOSE) cout << "FOR:" << endl;
     for (int i = 0; i < (int)gstv.size(); i++) {
-      cout << ":" << gstv.at(i).token.instance << endl;
+      if (VERBOSE) cout << ":" << gstv.at(i).token.instance << endl;
       if (gstv.at(i).token.id == IDENTIFIER_TK && gstv.at(i).isData)
         ASMFILE << gstv.at(i).token.instance << " 0\n";
     }
@@ -111,6 +111,21 @@ void generateCode(Node* node, int level) {
       ASMFILE << "\n";
     }
   }
+  else if (label == "expr") {
+    // possible leaves: -
+  }
+  else if (label == "N") {
+    // possible leaves: / or *
+  }
+  else if (label == "A") {
+    // possible leaves: +
+  }
+  else if (label == "M") {
+    // possible leaves: *
+  }
+  else if (label == "R") {
+    // possible leaves: ( )
+  }
   else if (label == "stats") {
     // possible leaves: none
   }
@@ -118,6 +133,9 @@ void generateCode(Node* node, int level) {
     // possible leaves: none
   }
   else if (label == "stat") {
+    // possible leaves: ;
+  }
+  else if (label == "assign") {
     // possible leaves: ;
   }
   else if (label == "in") {
@@ -128,12 +146,33 @@ void generateCode(Node* node, int level) {
   }
   else if (label == "out") {
     // possible leaves: outter 
-    if (leafsize == 1) {
-      ASMFILE << "WRITE "; 
+  }
+  else if (label == "if") {
+
+  }
+  else if (label == "loop") {
+
+  }
+  else if (label == "assign") {
+
+  }
+  else if (label == "RO") {
+
+  }
+  else if (label == "label") {
+    // void Identifier
+    if (leafsize >= 2) { 
+      ASMFILE << node->leaves_v.at(1).instance << ": NOOP\n";
+    }
+  }
+  else if (label == "goto") {
+    // proc Identifier
+    if (leafsize >= 2) {
+      ASMFILE << "BR " << node->leaves_v.at(1).instance << "\n";
     }
   }
   else {
-    cout << "Label " << label << " not implemented." << endl;
+    if (VERBOSE) cout << "Label " << label << " not implemented." << endl;
   }
   
 
