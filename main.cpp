@@ -43,13 +43,13 @@ int main(int argc, char *argv[]) {
   string infile;  //this will be the filename with extension
   switch(argc) {
     case 1: {
-      cout << "No file specified. Using stdin.  Enter 'stop' when finished:" << endl;
+      cout << "No file specified. Using stdin.  Enter 'STOP' when finished:" << endl;
 
       string sin;
       const string tempfile = "kb.fs";
       ofstream myfile(tempfile);
       while(std::getline(std::cin, sin)) {
-        if (sin == "stop") {
+        if (sin == "STOP" || sin == "stop") {
           infile = (tempfile);
           break;
         }
