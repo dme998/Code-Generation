@@ -49,12 +49,14 @@ void sweepST(vector<STV_t> &dynamic_v) {
   for(unsigned int i=0; i<gtokens_v.size(); i++) {
     STV_t mystv;
 
-    if (gtokens_v[i].id == KEYWORD_TK && gtokens_v[i].instance == "data") {
-      mystv.token = gtokens_v[i+1];
-      mystv.isData = true;
-      dynamic_v.push_back(mystv);
-      if (VERBOSE) cout << "data " << mystv.token.instance << ";" << endl;
-      i++;
+    if (gtokens_v[i].id == KEYWORD_TK) {
+      if (gtokens_v[i].instance == "data" || gtokens_v[i].instance == "proc") {
+        mystv.token = gtokens_v[i+1];
+        mystv.isData = true;
+        dynamic_v.push_back(mystv);
+        if (VERBOSE) cout << "data " << mystv.token.instance << ";" << endl;
+        i++;
+      }
     }
     else if (gtokens_v[i].id == IDENTIFIER_TK) {
       mystv.token = gtokens_v[i];
