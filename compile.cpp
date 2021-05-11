@@ -22,10 +22,13 @@ using std::cout;
 using std::endl;
 using std::string;
 using std::ofstream;
+using std::vector;
 
 const bool VERBOSE = false;
 string targetName;  // asm file to write-to
 ofstream ASMFILE;
+string parent;  // global helper string for tracking parent productions across recursion
+string tmpinstance;
 
 /* auxillary function to code generation and storage allocation
  * @param mytree the root node to the previously generated parse tree
@@ -107,29 +110,68 @@ void generateCode(Node* node, int level) {
   }
   else if (label == "expr") {
     // possible leaves: -
-    cout << "Warning: <expr> expression could not be translated." << endl;
     if (leafsize == 1) {
       //<N> - <expr>
+      cout << "Warning: <expr> expression could not be translated." << endl;
     }
     else {
-
+      //continue to <N>
     }
   }
   else if (label == "N") {
     // possible leaves: / or *
-    cout << "Warning: <N> operation could not be translated." << endl;
+    if (leafsize == 1) {
+      //<A> / <N> or <A> * <N>
+      if (node->leaves_v.at(0).instance == "*") {
+        cout << "Warning: <A> * <N> operation could not be translated." << endl;
+      }
+      else if (node->leaves_v.at(0).instance == "/") {
+        cout << "Warning: <A> / <N> operation could not be translated." << endl;
+      }
+    }
+    else {
+      //continue to <A>
+    }
   }
   else if (label == "A") {
     // possible leaves: +
-    cout << "Warning: <A> operation could not be translated." << endl;
+    if (leafsize == 1) {
+      // <M> + <A>
+      cout << "Warning: <A> + <A> operation could not be translated." << endl;
+    }
+    else {
+      //continue to <M>
+    }
   }
   else if (label == "M") {
     // possible leaves: *
-    cout << "Warning: <M> operation could not be translated." << endl;
+    if (leafsize == 1) {
+      // * <M>
+      cout << "Warning: <M> operation could not be translated." << endl;
+    }
+    else {
+      //continue to <R>
+    }
   }
   else if (label == "R") {
-    // possible leaves: ( )
-    cout << "Warning: <R> operation could not be translated." << endl;
+    // possible leaves: ( ) or Identifier or Integer
+    if (leafsize == 2) {
+      cout << "Warning: <R> operation could not be translated." << endl;
+    }
+    else if (leafsize == 1) {
+      //Identifier or Integer
+      if (parent == "outter <expr>") { 
+        ASMFILE << "WRITE " << node->leaves_v.at(0).instance << "\n";
+      }
+      else if (parent == "assign") {
+        ASMFILE << "ADD " << node->leaves_v.at(0).instance << "\n"
+        << "STORE " << tmpinstance << "\n"
+        << "SUB " << node->leaves_v.at(0).instance << "\n";
+      }
+      else {
+        ASMFILE << "NOOP\n";
+      }
+    }
   }
   else if (label == "stats") {
     // possible leaves: none
@@ -141,7 +183,10 @@ void generateCode(Node* node, int level) {
     // possible leaves: ;
   }
   else if (label == "assign") {
-    // possible leaves: ;
+    // possible leaves: assign Identifier :=
+    parent = "assign";
+    tmpinstance = node->leaves_v.at(1).instance;
+    //continue to <expr>
   }
   else if (label == "in") {
     // possible leaves: getter var
@@ -151,6 +196,7 @@ void generateCode(Node* node, int level) {
   }
   else if (label == "out") {
     // possible leaves: outter 
+    parent = "outter <expr>";
   }
   else if (label == "if") {
     cout << "Warning: <if> statement could not be translated." << endl;
@@ -158,11 +204,8 @@ void generateCode(Node* node, int level) {
   else if (label == "loop") {
     cout << "Warning: <loop> statement could not be translated." << endl;
   }
-  else if (label == "assign") {
-    cout << "Warning: <assign> statement could not be translated." << endl;
-  }
   else if (label == "RO") {
-    cout << "Warning: <RO> operatoration could not be translated." << endl;
+    //cout << "Warning: <RO> operation could not be translated." << endl;
   }
   else if (label == "label") {
     // void Identifier
