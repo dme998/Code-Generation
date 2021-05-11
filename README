@@ -1,4 +1,6 @@
 Storage=Global
+Note: the example program given p4g5 doesn't pass the parser.  As far as I can tell, this is correct 
+behavior.  <stat> should produce <loop> ; but the semicolon is absent. 
 
 Project:        Code Generation (P4)
 Description:    Generates asm code after lexical analysis, parsing, and semantics analysis
