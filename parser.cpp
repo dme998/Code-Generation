@@ -258,7 +258,6 @@ Node* Nonterminal :: fn_stat() {  //done
       return p;
     }
     else error(";", mytoken); 
-    return p;
   }
   else if (mytoken.id == KEYWORD_TK && mytoken.instance == "assign" ) {  //First(assign)
     p->n0 = nonterminal.fn_assign();
