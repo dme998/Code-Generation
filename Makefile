@@ -4,6 +4,7 @@ RM= rm -vf
 CPPFLAGS= -g -Wall -std=c++11 -I.
 PROGRAM= compfs
 OBJFILES= main.o parser.o scanner.o driveScanner.o semantics.o compile.o
+TEMPFILES= kb.fs
 
 $(PROGRAM): $(OBJFILES)
 	$(CC) -o $(PROGRAM) $(OBJFILES)
@@ -27,4 +28,4 @@ compile.o: compile.cpp compile.h
 	$(CC) $(CPPFLAGS) -c compile.cpp
 
 clean:
-	$(RM) $(PROGRAM) $(OBJFILES)
+	$(RM) $(PROGRAM) $(OBJFILES) $(TEMPFILES)
