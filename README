@@ -10,7 +10,7 @@ Test System:    CentOS Linux 7 (Core)
 Files:          main.cpp parser.cpp parser.h driveScanner.cpp driveScanner.h 
                 scanner.cpp scanner.h ptree.h token.h semantics.cpp semantics.h 
                 compiler.cpp compiler.h
-Produces:       tmp.fs (overwrites), [file].asm (overwrites)
+Produces:       kb.fs (overwrites), [file].asm (overwrites)
 
 The assembly code is generated according to specification at <https://comp.umsl.edu/assembler/>.
 

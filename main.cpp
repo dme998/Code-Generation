@@ -32,7 +32,6 @@ vector<token_t> gtokens_v;
 vector<STV_t> gstv; //global symbol table vector
 const bool VERBOSE = false; //set to true to enable verbose print statements throughout run
 
-
 /**
  * Main executable to run
  * @param argv name of file to be run through scanner
@@ -47,7 +46,7 @@ int main(int argc, char *argv[]) {
       cout << "No file specified. Using stdin.  Enter 'stop' when finished:" << endl;
 
       string sin;
-      const string tempfile = "tmp.fs";
+      const string tempfile = "kb.fs";
       ofstream myfile(tempfile);
       while(std::getline(std::cin, sin)) {
         if (sin == "stop") {
