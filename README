@@ -1,11 +1,3 @@
-Storage=Global
-!Important Notes: 
-  1) if-statements, loops, and arithmetic operations are not implemented. 
-     A warning is displayed if attempting to compile unsupported code. 
-     If no warning is displayed, the compiled program is intended to work. 
-  2) proc defines the identifier, void does not (i.e. proc must come before void).
-
---------------------------------------------------------------------------------
 Project:        Code Generation (P4)
 Description:    Generates asm code after lexical analysis, parsing, and semantics analysis
 Author:         Daniel Eggers <dme998@mail.umsl.edu>
@@ -19,7 +11,7 @@ Files:          main.cpp parser.cpp parser.h driveScanner.cpp driveScanner.h
 Produces:       kb.fs (overwrites), [file].asm (overwrites)
 
 The assembly code is generated according to specification at <https://comp.umsl.edu/assembler/>.
-
+This repository builds off of my scanner <https://github.com/dme998/Lexical-Analyzer>.
 
 Invocation:
   compfs [file]
@@ -29,14 +21,22 @@ Invocation:
     The user input is written to temporary file "tmp.fs" and processed immediately after write.
 
 Verbose Option:
-  A global variable "const bool VERBOSE" is at the top of some source files.
+  A global variable "const bool VERBOSE" is at the top of some source files, intended for debugging. 
   If set to TRUE, verbose statements are printed as the program runs its course.
 
 Overview of functionality:
   This program lexically analyzes a file (tokens separated by whitespace) and loads tokens into vector.
   The vector is then processed by the parser to determine if syntax matches grammar (see below).
+  The parser builds a tree of tokens to be traversed during code generation.
   The semantics analyzer checks proper declaration and use of variables (global scope only).
   ASM Code is written to target file with the same base filename as the input file.
+  
+Limitations: 
+  if-statements, loops, %, and arithmetic operations are not implemented. 
+    A warning is displayed if attempting to compile unsupported code. 
+    If no warning is displayed, the compiled program is intended to work. 
+  proc defines the identifier, void does not (i.e. proc must come before void).
+  Variable scope is global-only.
 
 Details of functionality:
   1. main() processes cmdl arguments.
