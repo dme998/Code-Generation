@@ -1,5 +1,5 @@
 Project:        Code Generation (P4)
-Description:    Generates asm code after lexical analysis, parsing, and semantics analysis
+Description:    Generates asm code after lexical analysis, recursive-descent parsing, and static-semantics analysis
 Author:         Daniel Eggers <dme998@mail.umsl.edu>
 Course:         Program Translation (CS4280-001)
 Instructor:     Mark Hauschild
